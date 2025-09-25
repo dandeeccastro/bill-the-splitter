@@ -40,12 +40,16 @@ export const useTableStore = defineStore('table', () => {
     items.value.delete(name);
   }
 
-  // function calculateTabValue = (item: Item, name: string)
+  function calculateTabValue(item: Item, name: string) {
+    const val = item.value * item.amount * item.people.filter((x: string) => x === name).length;
+    const intPart = Math.floor(val / item.people.length);
+    const floatPart = val % item.people.length;
+    return { tabValue: intPart, leftoverCents: floatPart };
+  }
 
   function getPersonTab(name: string) {
     const orderedItems = Object.values(items.value).filter((item) => item.people.includes(name));
-    const calculateTabValue = (item: Item) => item.value * item.amount * item.people.filter((x: string) => x === name).length / item.people.length;
-    return orderedItems.map((item) => ({ ...item, tabValue: calculateTabValue(item) }))
+    return orderedItems.map((item) => ({ ...item, ...calculateTabValue(item, name) }))
   };
 
   const totalValue = computed(() => Object.values(items.value).reduce((acc: number, curr: Item) => acc + curr.value * curr.amount, 0))
