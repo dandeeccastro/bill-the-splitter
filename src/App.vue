@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useTableStore } from '@/stores/table';
+
 import TotalTab from '@/components/TotalTab.vue';
 import PartialTab from '@/components/PartialTab.vue';
+import TableModal from '@/components/TableModal.vue';
 
 const store = useTableStore();
 // NOTE: Testing a type of input
@@ -28,6 +30,8 @@ const selectedTab = ref('Total');
   </div>
   <TotalTab v-if='selectedTab === "Total"'></TotalTab>
   <PartialTab v-if='selectedTab === "Por pessoa"'></PartialTab>
+  <button class="btn btn-xl btn-circle btn-active absolute bottom-4 right-4 shadow" onclick='poggiesmodal.showModal()'>+</button>
+  <TableModal></TableModal>
 </template>
 
 <style scoped></style>
