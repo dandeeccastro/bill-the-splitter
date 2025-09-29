@@ -14,6 +14,9 @@ importers:
       daisyui:
         specifier: ^5.1.14
         version: 5.1.14
+      oh-vue-icons:
+        specifier: 1.0.0-rc3
+        version: 1.0.0-rc3(vue@3.5.21(typescript@5.8.3))
       pinia:
         specifier: ^3.0.3
         version: 3.0.3(typescript@5.8.3)(vue@3.5.21(typescript@5.8.3))
@@ -1471,6 +1474,15 @@ packages:
   nth-check@2.1.1:
     resolution: {integrity: sha512-lqjrjmaOoAnWfMmBPL+XNnynZh2+swxiX3WUE0s4yEHI6m+AwrK2UZOimIRl3X/4QctVqS8AiZjFqyOGrMXb/w==}
 
+  oh-vue-icons@1.0.0-rc3:
+    resolution: {integrity: sha512-+k2YC6piK7sEZnwbkQF3UokFPMmgqpiLP6f/H0ovQFLl20QA5V4U8EcI6EclD2Lt5NMQ3k6ilLGo8XyXqdVSvg==}
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^2.0.0 || >=3.0.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
+
   ohash@2.0.11:
     resolution: {integrity: sha512-RdR9FQrFwNBNXAr4GixM8YaRZRJ5PUWbKYbE5eOsrwAjJW0q2REGcf79oYPsLyskQCZG1PLN+S/K1V00joZAoQ==}
 
@@ -1804,6 +1816,17 @@ packages:
 
   vscode-uri@3.1.0:
     resolution: {integrity: sha512-/BpdSx+yCQGnCvecbyXdxHDkuk55/G3xwnC0GqY4gmQ3j+A+g8kzzgB4Nk/SINjqn6+waqw3EgbVF2QKExkRxQ==}
+
+  vue-demi@0.12.5:
+    resolution: {integrity: sha512-BREuTgTYlUr0zw0EZn3hnhC3I6gPWv+Kwh4MCih6QcAeaTlaIX0DwOVN0wHej7hSvDPecz4jygy/idsgKfW58Q==}
+    engines: {node: '>=12'}
+    hasBin: true
+    peerDependencies:
+      '@vue/composition-api': ^1.0.0-rc.1
+      vue: ^3.0.0-0 || ^2.6.0
+    peerDependenciesMeta:
+      '@vue/composition-api':
+        optional: true
 
   vue-eslint-parser@10.2.0:
     resolution: {integrity: sha512-CydUvFOQKD928UzZhTp4pr2vWz1L+H99t7Pkln2QSPdvmURT0MoC4wUccfCnuEaihNsu9aYYyk+bep8rlfkUXw==}
@@ -3212,6 +3235,11 @@ snapshots:
     dependencies:
       boolbase: 1.0.0
 
+  oh-vue-icons@1.0.0-rc3(vue@3.5.21(typescript@5.8.3)):
+    dependencies:
+      vue: 3.5.21(typescript@5.8.3)
+      vue-demi: 0.12.5(vue@3.5.21(typescript@5.8.3))
+
   ohash@2.0.11: {}
 
   open@10.2.0:
@@ -3520,6 +3548,10 @@ snapshots:
       lightningcss: 1.30.1
 
   vscode-uri@3.1.0: {}
+
+  vue-demi@0.12.5(vue@3.5.21(typescript@5.8.3)):
+    dependencies:
+      vue: 3.5.21(typescript@5.8.3)
 
   vue-eslint-parser@10.2.0(eslint@9.36.0(jiti@2.6.0)):
     dependencies:

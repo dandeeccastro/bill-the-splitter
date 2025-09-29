@@ -30,7 +30,9 @@ const selectedTab = ref('Total');
   </div>
   <TotalTab v-if='selectedTab === "Total"'></TotalTab>
   <PartialTab v-if='selectedTab === "Por pessoa"'></PartialTab>
-  <button class="btn btn-xl btn-circle btn-active absolute bottom-4 right-4 shadow" onclick='poggiesmodal.showModal()'>+</button>
+  <button class="btn btn-xl btn-circle btn-active absolute bottom-4 right-4 shadow" onclick='poggiesmodal.showModal()'>
+    <v-icon name='md-edit'></v-icon>
+  </button>
   <TableModal></TableModal>
 </template>
 
