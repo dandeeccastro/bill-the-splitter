@@ -2,9 +2,9 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 
 import { OhVueIcon, addIcons } from 'oh-vue-icons';
-import { MdEdit, MdDeleteOutlined } from 'oh-vue-icons/icons';
+import { MdEdit, MdDeleteOutlined, BiCheckLg } from 'oh-vue-icons/icons';
 
-addIcons(MdEdit, MdDeleteOutlined);
+addIcons(MdEdit, MdDeleteOutlined, BiCheckLg);
 
 import App from './App.vue'
 import router from './router'

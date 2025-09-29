@@ -10,8 +10,10 @@ type Item = {
 
 export const useTableStore = defineStore('table', () => {
   const people = ref([] as Array<string>);
-  function editPerson(index: number, newName: string) {
+  function editPerson(name: string, newName: string) {
+    const index = people.value.indexOf(name);
     people.value[index] = newName;
+    reassignItems(name, newName);
   }
   function addPerson(newPerson: string) {
     people.value.push(newPerson);
@@ -38,6 +40,13 @@ export const useTableStore = defineStore('table', () => {
   }
   function removeItem(name: string) {
     items.value.delete(name);
+  }
+  function reassignItems(oldName: string, newName: string) {
+    for (const itemName of Object.keys(items.value)) {
+      if (items.value[itemName].people.includes(oldName)) {
+        items.value[itemName].people = items.value[itemName].people.map((x) => x === oldName ? newName : x);
+      }
+    }
   }
 
   function calculateTabValue(item: Item, name: string) {
