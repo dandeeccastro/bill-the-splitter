@@ -25,7 +25,8 @@ function editPerson() {
     </div>
   </div>
   <div class="list-row" v-else>
-    <input type="text" v-model='editablePerson' :placeholder='props.person' class="input">
+    <input type="text" v-model='editablePerson' :placeholder='props.person' class="input
+      list-col-grow">
     <v-icon class='mx-1 h-full' name='bi-check-lg' @click='editPerson'></v-icon>
   </div>
 </template>

@@ -52,6 +52,7 @@ const selectedTab = ref('Pessoas');
             v-for='item of store.items'
             :key='item.name'
             :item='item'
+            @editItem='store.editItem'
             @deleteItem='store.removeItem'
           ></ItemListItem>
           <div class="list-row flex justify-center">

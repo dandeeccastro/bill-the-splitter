@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { defineProps } from 'vue';
+import { ref, defineProps, defineEmits } from 'vue';
 
 interface Item {
   name: string,
@@ -8,25 +8,50 @@ interface Item {
   people: Array<string>,
 }
 
-defineProps<{
+const props = defineProps<{
   item: Item,
 }>();
 
 function formatMoney(value: number) {
   return `R$ ${value/100}`
 }
+
+const emit = defineEmits(['editItem', 'deleteItem']);
+
+const editMode = ref(false);
+
+const name = ref(props.item.name);
+const amount = ref(props.item.amount);
+const value = ref(props.item.value);
+const people = ref(props.item.people);
+
+function editItem() {
+  emit('editItem', props.item.name, name.value, value.value, amount.value, people.value);
+  editMode.value = false;
+}
+
 </script>
 <template>
-  <div class="list-row">
+  <div class="list-row" v-if='!editMode'>
     <div class="list-col-grow">
-      {{ item.amount }} {{ item.name }} ({{formatMoney(item.value)}})
+      {{ amount }} {{ name }} ({{formatMoney(value)}})
     </div>
     <div class="list-col-wrap">
-      <span v-for='person in item.people' :key='person'  class="badge border-secondary mx-1">{{person}}</span>
+      <span v-for='person in people' :key='person'  class="badge border-secondary mx-1">{{person}}</span>
     </div>
     <div>
-      <v-icon class='mx-1' name='md-edit'></v-icon>
+      <v-icon class='mx-1' name='md-edit' @click='editMode = true'></v-icon>
       <v-icon class='mx-1' name='md-delete-outlined' @click='$emit("deleteItem", item.name)'></v-icon>
+    </div>
+  </div>
+  <div class="list-row" v-else>
+    <div class="list-col-grow">
+      <input type="text" v-model='name' class="input">
+      <input type="number" v-model='value' class="input">
+      <input type="number" v-model='amount' class="input">
+    </div>
+    <div>
+      <v-icon class="mx-1" name='bi-check-lg' @click='editItem'></v-icon>
     </div>
   </div>
 </template>
