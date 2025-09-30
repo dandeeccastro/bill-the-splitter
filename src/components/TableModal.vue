@@ -26,7 +26,7 @@ const selectedTab = ref('Pessoas');
             :key='person'
             :person='person'
             @editPerson='store.editPerson'
-            @deletePerson='store.deletePerson'
+            @deletePerson='store.removePerson'
           ></PersonListItem>
           <div class="list-row flex justify-center"><button class="btn">Adicionar pessoa</button></div>
         </div>

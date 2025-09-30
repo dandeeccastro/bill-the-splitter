@@ -21,6 +21,11 @@ export const useTableStore = defineStore('table', () => {
   function removePerson(name: string) {
     const index = people.value.indexOf(name);
     people.value.splice(index, 1);
+    for (const itemName of Object.keys(items.value)) {
+      if (items.value[itemName].people.includes(name)) {
+        items.value[itemName].people = items.value[itemName].people.filter((x) => x !== name);
+      }
+    }
   }
 
   const items = ref({} as Map<string, Item>);
