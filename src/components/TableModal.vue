@@ -16,8 +16,18 @@ const selectedTab = ref('Pessoas');
     <div class="modal-box h-7/10">
       <h3 class="text-2xl w-full text-center">Editar mesa</h3>
       <div role='tablist' class='tabs tabs-border overflow-x-scroll flex-nowrap'>
-        <a role='tab' class='tab' :class="{ 'tab-active': selectedTab === 'Pessoas'}" @click='selectedTab= "Pessoas"'>Pessoas</a>
-        <a role='tab' class='tab' :class="{ 'tab-active': selectedTab === 'Itens'}" @click='selectedTab = "Itens"'>Itens</a>
+        <a
+          role='tab'
+          class='tab'
+          :class="{ 'tab-active': selectedTab === 'Pessoas'}"
+          @click='selectedTab= "Pessoas"'
+        >Pessoas</a>
+        <a
+          role='tab'
+          class='tab'
+          :class="{ 'tab-active': selectedTab === 'Itens'}"
+          @click='selectedTab = "Itens"'
+        >Itens</a>
       </div>
       <div v-if="selectedTab === 'Pessoas'">
         <div class="list">
@@ -28,15 +38,28 @@ const selectedTab = ref('Pessoas');
             @editPerson='store.editPerson'
             @deletePerson='store.removePerson'
           ></PersonListItem>
-          <div class="list-row flex justify-center"><button class="btn">Adicionar pessoa</button></div>
+          <div class="list-row flex justify-center">
+            <button
+              class="btn"
+              @click='store.addPerson(`Pessoa ${store.peopleCount}`)'
+            >Adicionar pessoa</button>
+          </div>
         </div>
       </div>
       <div v-if='selectedTab === "Itens"'>
         <div class="list">
-          <div class="list-row" v-for='item of store.items' :key='item.name'>
-            <ItemListItem :item='item'></ItemListItem>
+          <ItemListItem
+            v-for='item of store.items'
+            :key='item.name'
+            :item='item'
+            @deleteItem='store.removeItem'
+          ></ItemListItem>
+          <div class="list-row flex justify-center">
+            <button
+              class="btn"
+              @click='store.addItem(`Item ${store.itemCount}`, 0, 1, [])'
+            >Adicionar item</button>
           </div>
-          <div class="list-row flex justify-center"><button class="btn">Adicionar item</button></div>
         </div>
       </div>
     </div>

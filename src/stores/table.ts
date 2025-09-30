@@ -44,7 +44,7 @@ export const useTableStore = defineStore('table', () => {
     }
   }
   function removeItem(name: string) {
-    items.value.delete(name);
+    delete items.value[name];
   }
   function reassignItems(oldName: string, newName: string) {
     for (const itemName of Object.keys(items.value)) {
@@ -68,5 +68,8 @@ export const useTableStore = defineStore('table', () => {
 
   const totalValue = computed(() => Object.values(items.value).reduce((acc: number, curr: Item) => acc + curr.value * curr.amount, 0))
 
-  return { people, editPerson, addPerson, removePerson, items, addItem, editItem, removeItem, getPersonTab, totalValue }
+  const itemCount = computed(() => Object.keys(items.value).length);
+  const peopleCount = computed(() => people.value.length);
+
+  return { people, editPerson, addPerson, removePerson, items, addItem, editItem, removeItem, getPersonTab, totalValue, itemCount, peopleCount }
 })
