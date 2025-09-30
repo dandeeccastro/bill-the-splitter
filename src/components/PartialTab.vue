@@ -25,7 +25,7 @@ function calculateLeftoverCents() {
   return store.totalValue - tabsTotal;
 }
 
-const tabs = ref(buildTabs());
+const tabs = computed(buildTabs);
 const people = computed(() => Object.keys(tabs.value));
 const leftoverCents = computed(calculateLeftoverCents);
 </script>
