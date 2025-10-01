@@ -14,9 +14,33 @@ const leftoverCents = computed(() => {
 function totalTabValue(tab) {
   return tab.reduce((acc, curr) => acc + curr.tabValue, 0);
 }
+
+function hasOrderedSomething(name) {
+  return totalTabValue(store.tabs[name]) > 0;
+}
 </script>
 
 <template>
+  <div v-for='person of people.filter(hasOrderedSomething)' :key='person' class="card shadow">
+    <div class="card-body">
+      <h2 class="card-title">{{person}}</h2>
+      <table class="table table-sm">
+        <tbody>
+          <tr v-for='item of store.tabs[person]' :key='item.name'>
+            <td>{{ item.people.filter((x) => x === person).length }}/{{ item.people.length }}
+              {{item.name}} ({{formatMoney(item.value)}})</td>
+            <td>= {{formatMoney(item.tabValue)}}</td>
+          </tr>
+          <tr>
+            <td class='font-bold uppercase text-md'>Total</td>
+            <td>= {{formatMoney(totalTabValue(store.tabs[person]))}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class='text-lg text-right w-full px-4'>Centavos sobrando: {{formatMoney(leftoverCents)}}</div>
+  <!--
   <div v-for='person of people.filter((p) => totalTabValue(store.tabs[p]) > 0)' :key='person' class='overflow-x-auto py-4'>
     <h2 class="text-xl center w-full font-semibold px-2">{{person}}</h2>
     <table class='table table-sm px-4'>
@@ -35,6 +59,7 @@ function totalTabValue(tab) {
     </table>
   </div>
   <h3 class='text-md text-right w-full px-4'>Sobrando: {{formatMoney(leftoverCents)}}</h3>
+  -->
 </template>
 
 <style scoped></style>

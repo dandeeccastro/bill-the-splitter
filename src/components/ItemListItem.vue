@@ -1,5 +1,5 @@
 <script setup lang='ts'>
-import { ref, defineProps, defineEmits } from 'vue';
+import { ref } from 'vue';
 import { useTableStore } from '@/stores/table';
 import { formatMoney } from '@/services/currency';
 
