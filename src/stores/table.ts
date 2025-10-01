@@ -35,12 +35,12 @@ export const useTableStore = defineStore('table', () => {
   function editItem(currentName: string, newName: string, newValue: number, newAmount: number, newPeople: Array<string>) {
     const currentItem = items.value[currentName] as Item;
     if (currentItem) {
-      items.value.set(currentName, {
+      items.value[currentName] = {
         name: newName || currentItem.name,
         value: newValue || currentItem.value,
         amount: newAmount || currentItem.amount,
         people: newPeople || currentItem.people,
-      })
+      }
     }
   }
   function removeItem(name: string) {

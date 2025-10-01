@@ -1,5 +1,8 @@
 <script setup lang='ts'>
 import { ref, defineProps, defineEmits } from 'vue';
+import { useTableStore } from '@/stores/table';
+
+const store = useTableStore();
 
 interface Item {
   name: string,
@@ -49,6 +52,10 @@ function editItem() {
       <input type="text" v-model='name' class="input">
       <input type="number" v-model='value' class="input">
       <input type="number" v-model='amount' class="input">
+      <div v-for='person of store.people' :key='person'>
+        <input type="checkbox" class='checkbox' :id='person' :value='person' v-model='people'>
+        <label :for="person">{{person}}</label>
+      </div>
     </div>
     <div>
       <v-icon class="mx-1" name='bi-check-lg' @click='editItem'></v-icon>

@@ -40,7 +40,7 @@ const selectedTab = ref('Pessoas');
           ></PersonListItem>
           <div class="list-row flex justify-center">
             <button
-              class="btn"
+              class="btn btn-primary"
               @click='store.addPerson(`Pessoa ${store.peopleCount}`)'
             >Adicionar pessoa</button>
           </div>
@@ -57,7 +57,7 @@ const selectedTab = ref('Pessoas');
           ></ItemListItem>
           <div class="list-row flex justify-center">
             <button
-              class="btn"
+              class="btn btn-primary"
               @click='store.addItem(`Item ${store.itemCount}`, 0, 1, [])'
             >Adicionar item</button>
           </div>
