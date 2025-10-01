@@ -1,11 +1,8 @@
 <script setup lang="ts">
 import { useTableStore } from '@/stores/table';
+import { formatMoney } from '@/services/currency';
 
 const store = useTableStore();
-
-function formatMoney(value: number) {
-  return `R$ ${value/100}`
-}
 </script>
 
 <template>

@@ -1,6 +1,7 @@
 <script setup lang='ts'>
 import { ref, defineProps, defineEmits } from 'vue';
 import { useTableStore } from '@/stores/table';
+import { formatMoney } from '@/services/currency';
 
 const store = useTableStore();
 
@@ -14,10 +15,6 @@ interface Item {
 const props = defineProps<{
   item: Item,
 }>();
-
-function formatMoney(value: number) {
-  return `R$ ${value/100}`
-}
 
 const emit = defineEmits(['editItem', 'deleteItem']);
 
