@@ -18,7 +18,7 @@ function editPerson() {
 async function toggleEdit() {
   editMode.value = true
   await nextTick()
-  document.getElementById(editablePerson.value).focus()
+  document.getElementById(editablePerson.value)!.focus()
 }
 </script>
 
