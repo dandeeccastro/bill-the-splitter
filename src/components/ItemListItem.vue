@@ -26,7 +26,7 @@ const value = ref(props.item.value);
 const people = ref(props.item.people);
 
 function editItem() {
-  const newPeople = Object.keys(people.value).reduce((acc, curr) => {
+  const newPeople = Object.keys(people.value).reduce((acc: {[key:string]: number}, curr: string) => {
     if (people.value[curr]) {
       acc[curr] = people.value[curr];
     }

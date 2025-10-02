@@ -3,6 +3,15 @@ import { computed } from 'vue';
 import { useTableStore } from '@/stores/table';
 import { formatMoney } from '@/services/currency';
 
+type Item = {
+  name: string,
+  value: number,
+  amount: number,
+  people: { [key: string]: number },
+  tabValue?: number,
+  leftoverCents?: number,
+}
+
 const store = useTableStore();
 
 const people = computed(() => Object.keys(store.tabs));
@@ -11,11 +20,11 @@ const leftoverCents = computed(() => {
   return store.totalValue - calculatedTotal;
 });
 
-function totalTabValue(tab) {
-  return tab.reduce((acc, curr) => acc + curr.tabValue, 0);
+function totalTabValue(tab: Item[]): number {
+  return tab.reduce((acc: number, curr: Item) => acc + ( curr.tabValue || 0 ), 0);
 }
 
-function hasOrderedSomething(name) {
+function hasOrderedSomething(name: string): boolean {
   return totalTabValue(store.tabs[name]) > 0;
 }
 </script>
@@ -30,7 +39,7 @@ function hasOrderedSomething(name) {
             <tr v-for='item of store.tabs[person]' :key='item.name'>
               <td>{{ item.people[person] }}/{{ Object.values(item.people).reduce((acc, curr) => acc + curr, 0) }}
                 {{item.name}} ({{formatMoney(item.value)}})</td>
-              <td>= {{formatMoney(item.tabValue)}}</td>
+              <td>= {{formatMoney(item.tabValue || 0)}}</td>
             </tr>
             <tr>
               <td class='font-bold uppercase text-md'>Total</td>
