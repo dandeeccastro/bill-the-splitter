@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import { useTableStore } from '@/stores/table'
 import { formatMoney } from '@/services/currency'
+import { vMaska } from 'maska/vue'
 
 const store = useTableStore()
 
@@ -23,6 +24,7 @@ const editMode = ref(false)
 const name = ref(props.item.name)
 const amount = ref(props.item.amount)
 const value = ref(props.item.value)
+const maskedValue = ref(props.item.value)
 const people = ref(props.item.people)
 
 function editItem() {
@@ -48,6 +50,16 @@ function editItem() {
   emit('editItem', props.item.name, item)
   editMode.value = false
 }
+
+const maskOptions = {
+  mask: '0 00#,##',
+  reversed: true,
+  tokens: {
+    0: { pattern: /[0-9]/, repeated: true },
+  },
+}
+
+defineExpose({ value })
 </script>
 <template>
   <div class="list-row" v-if="!editMode">
@@ -80,8 +92,8 @@ function editItem() {
         <input type="text" v-model="name" class="input" />
       </fieldset>
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Valor em centavos</legend>
-        <input type="number" v-model="value" class="input" />
+        <legend class="fieldset-legend">Valor (com vírgula)</legend>
+        <input v-maska:value.unmasked="maskOptions" v-model="maskedValue" class="input" />
       </fieldset>
       <fieldset class="fieldset">
         <legend class="fieldset-legend">Quantidade pedida pela mesa</legend>
