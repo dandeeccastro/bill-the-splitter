@@ -24,9 +24,14 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/upload-pages-artifact@v4.0.0
+      - name: Uploading static files
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist/
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GH
+        uses: actions/deploy-pages@v4.0.0
