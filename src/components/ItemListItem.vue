@@ -9,7 +9,7 @@ interface Item {
   name: string,
   value: number,
   amount: number,
-  people: Array<string>,
+  people: { [key: string]: number },
 }
 
 const props = defineProps<{
@@ -26,7 +26,23 @@ const value = ref(props.item.value);
 const people = ref(props.item.people);
 
 function editItem() {
-  emit('editItem', props.item.name, name.value, value.value, amount.value, people.value);
+  const newPeople = Object.keys(people.value).reduce((acc, curr) => {
+    if (people.value[curr]) {
+      acc[curr] = people.value[curr];
+    }
+    return acc
+  }, {});
+
+  people.value = newPeople;
+
+  const item = {
+    name: name.value,
+    value: value.value,
+    amount: amount.value,
+    people: people.value
+  }
+
+  emit('editItem', props.item.name, item);
   editMode.value = false;
 }
 
@@ -37,7 +53,7 @@ function editItem() {
       {{ amount }} {{ name }} ({{formatMoney(value)}})
     </div>
     <div class="list-col-wrap">
-      <span v-for='person in people' :key='person'  class="badge border-secondary mx-1">{{person}}</span>
+      <span v-for='person in Object.keys(people)' :key='person'  class="badge border-secondary mx-1">{{person}}</span>
     </div>
     <div>
       <v-icon class='mx-1' name='md-edit' @click='editMode = true'></v-icon>
@@ -46,16 +62,28 @@ function editItem() {
   </div>
   <div class="list-row" v-else>
     <div class="list-col-grow">
-      <input type="text" v-model='name' class="input">
-      <input type="number" v-model='value' class="input">
-      <input type="number" v-model='amount' class="input">
-      <div v-for='person of store.people' :key='person'>
-        <input type="checkbox" class='checkbox' :id='person' :value='person' v-model='people'>
-        <label :for="person">{{person}}</label>
-      </div>
-    </div>
-    <div>
-      <v-icon class="mx-1" name='bi-check-lg' @click='editItem'></v-icon>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Nome</legend>
+        <input type="text" v-model='name' class="input">
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Valor em centavos</legend>
+        <input type="number" v-model='value' class="input">
+      </fieldset>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Quantidade pedida pela mesa</legend>
+        <input type="number" v-model='amount' class="input">
+      </fieldset>
+      <fieldset class='fieldset' v-for='person of store.people' :key='person'>
+        <legend class='fieldset-legend'>Quantidade pedida por {{person}}</legend>
+        <input type="number" class='input' v-model='people[person]'>
+      </fieldset>
+      <fieldset class="fieldset">
+        <button class='btn' @click='editItem'>
+          <v-icon class="mx-1" name='bi-check-lg'></v-icon>
+          Atualizar item
+        </button>
+      </fieldset>
     </div>
   </div>
 </template>

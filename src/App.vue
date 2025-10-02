@@ -1,23 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useTableStore } from '@/stores/table';
 
 import TotalTab from '@/components/TotalTab.vue';
 import PartialTab from '@/components/PartialTab.vue';
 import TableModal from '@/components/TableModal.vue';
-
-const store = useTableStore();
-// NOTE: Testing a type of input
-store.addPerson('Danilo')
-store.addPerson('Stephanie')
-store.addPerson('Marta')
-store.addPerson('Luiz')
-store.addPerson('Matheus')
-
-store.addItem('Refri', 799, 1, ['Danilo'])
-store.addItem('Chá', 899, 1, ['Stephanie'])
-store.addItem('Ribs pra dois', 12999, 1, ['Danilo', 'Stephanie'])
-store.addItem('Docinho', 2299, 1, ['Danilo', 'Stephanie'])
 
 const selectedTab = ref('Total');
 </script>

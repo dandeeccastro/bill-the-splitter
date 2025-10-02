@@ -5,7 +5,7 @@ type Item = {
   name: string,
   value: number,
   amount: number,
-  people: Array<string>,
+  people: { [key: string]: number },
   tabValue?: number,
   leftoverCents?: number,
 }
@@ -37,17 +37,17 @@ export const useTableStore = defineStore('table', () => {
   }
 
   // Item editing functions
-  function addItem(name: string, value: number, amount: number, people: Array<string>) {
-    items.value[name] = { name, value, amount, people } as Item;
+  function addItem(item: Item) {
+    items.value[item.name] = item;
   }
-  function editItem(currentName: string, newName: string, newValue: number, newAmount: number, newPeople: Array<string>) {
+  function editItem(currentName: string, item: Item) {
     const currentItem = items.value[currentName] as Item;
     if (currentItem) {
       items.value[currentName] = {
-        name: newName || currentItem.name,
-        value: newValue || currentItem.value,
-        amount: newAmount || currentItem.amount,
-        people: newPeople || currentItem.people,
+        name: item.name || currentItem.name,
+        value: item.value || currentItem.value,
+        amount: item.amount || currentItem.amount,
+        people: item.people || currentItem.people,
       }
     }
   }
@@ -58,23 +58,20 @@ export const useTableStore = defineStore('table', () => {
   // Internal functions
   function reassignItems(oldName: string, newName: string) {
     for (const itemName of Object.keys(items.value)) {
-      const itemData = items.value[itemName];
-      if (itemData.people.includes(oldName)) {
-        items.value[itemName].people = itemData.people.map((x) => x === oldName ? newName : x);
+      if (items.value[itemName].people[oldName]) {
+        items.value[itemName].people[newName] = items.value[itemName].people[oldName];
+        delete items.value[itemName].people[oldName];
       }
     }
   }
   function removeAssignmentOfItem(name: string) {
     for (const itemName of Object.keys(items.value)) {
-      const itemData = items.value[itemName] as Item;
-      if (itemData.people.includes(name)) {
-        items.value[itemName].people = itemData.people.filter((x) => x !== name);
-      }
+      delete items.value[itemName].people[name];
     }
   }
   function calculateTabValue(item: Item, name: string) {
-    const val = item.value * item.amount * item.people.filter((x: string) => x === name).length;
-    const intPart = Math.floor(val / item.people.length);
+    const val = item.value * item.amount * item.people[name];
+    const intPart = Math.floor(val / Object.values(item.people).reduce((acc, curr) => acc + curr, 0));
     const floatPart = val % item.people.length;
     return { tabValue: intPart, leftoverCents: floatPart };
   }
@@ -86,7 +83,7 @@ export const useTableStore = defineStore('table', () => {
     return result;
   }
   function getPersonTab(name: string) {
-    const orderedItems = Object.values(items.value).filter((item) => item.people.includes(name));
+    const orderedItems = Object.values(items.value).filter((item) => Object.keys(item.people).includes(name));
     return orderedItems.map((item) => ({ ...item, ...calculateTabValue(item, name) }))
   };
 

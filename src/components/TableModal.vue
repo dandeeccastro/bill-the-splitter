@@ -58,7 +58,7 @@ const selectedTab = ref('Pessoas');
           <div class="list-row flex justify-center">
             <button
               class="btn btn-primary"
-              @click='store.addItem(`Item ${store.itemCount}`, 0, 1, [])'
+              @click='store.addItem({ name: `Item ${store.itemCount}`, value: 0, amount: 1, people: {} })'
             >Adicionar item</button>
           </div>
         </div>
