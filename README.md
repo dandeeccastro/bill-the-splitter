@@ -1,39 +1,20 @@
-# bill-the-splitter-v2
+# Bill the Splitter
+> Para quando você quer rachar a conta sem rachar a cuca
 
-This template should help get you started developing with Vue 3 in Vite.
-
-## Recommended IDE Setup
-
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
-## Project Setup
+## Instalação de dependências
 
 ```sh
 pnpm install
 ```
 
-### Compile and Hot-Reload for Development
+## Rodando localmente
 
 ```sh
-pnpm dev
+pnpm dev --host # para acessar na rede local
 ```
 
-### Type-Check, Compile and Minify for Production
+## Buildando com type-checking
 
 ```sh
 pnpm build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-pnpm lint
 ```
