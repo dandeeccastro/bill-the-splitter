@@ -1,92 +1,164 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-type Item = {
-  name: string,
-  value: number,
-  amount: number,
-  people: { [key: string]: number },
-  tabValue?: number,
-  leftoverCents?: number,
+interface Item {
+  name: string
+  value: number
+}
+
+interface Order {
+  amount: number
+  people: string[]
+  item: string
+}
+
+interface PersonOrder extends Order {
+  price: number
+  leftoverCents: number
+}
+
+interface PersonTab {
+  orders: PersonOrder[]
+  tabValue: number
+  totalTabValue: number
 }
 
 export const useTableStore = defineStore('table', () => {
-  // Table state
-  const people = ref([] as Array<string>);
-  const items = ref({} as { [key: string]: Item });
+  const people = ref([] as Array<string>)
+  const items = ref([] as Array<Item>)
+  const orders = ref([] as Array<Order>)
+  const serviceTax = ref(12)
 
-  // Computed table state
-  const totalValue = computed(() => Object.values(items.value).reduce((acc: number, curr: Item) => acc + curr.value * curr.amount, 0));
-  const itemCount = computed(() => Object.keys(items.value).length);
-  const peopleCount = computed(() => people.value.length);
-  const tabs = computed(buildTabs);
+  const tabs = computed(() => {
+    return people.value.reduce((acc: { [key: string]: PersonTab }, person: string) => {
+      const personOrders = orders.value
+        .filter((order: Order) => order.people.includes(person))
+        .map((order: Order) => calculateOrderValue(order))
+      const tabValue = personOrders.reduce((acc: number, curr: PersonOrder) => acc + curr.price, 0)
+      const totalTabValue = tabValue + Math.floor((tabValue * serviceTax.value) / 100)
+      acc[person] = { orders: personOrders, tabValue, totalTabValue }
+      return acc
+    }, {})
+  })
 
-  // Person editing functions
-  function editPerson(name: string, newName: string) {
-    const index = people.value.indexOf(name);
-    people.value[index] = newName;
-    reassignItems(name, newName);
+  const totalTableValue = computed(() => {
+    return Object.values(tabs.value)
+      .flat()
+      .reduce((acc, curr) => acc + curr.totalTabValue, 0)
+  })
+
+  function addPerson(name: string) {
+    if (!people.value.includes(name)) {
+      people.value.push(name)
+    }
   }
-  function addPerson(newPerson: string) {
-    people.value.push(newPerson);
+
+  function editPerson(currentName: string, newName: string) {
+    const personIdx = people.value.indexOf(currentName)
+    if (personIdx >= 0) {
+      people.value[personIdx] = newName
+      reassignOrders(currentName, newName)
+    }
   }
+
   function removePerson(name: string) {
-    const index = people.value.indexOf(name);
-    people.value.splice(index, 1);
-    removeAssignmentOfItem(name);
+    const idx = people.value.indexOf(name)
+    if (idx >= 0) {
+      people.value = people.value.splice(idx, 1)
+      deassignOrders(name)
+    }
   }
 
-  // Item editing functions
   function addItem(item: Item) {
-    items.value[item.name] = item;
-  }
-  function editItem(currentName: string, item: Item) {
-    const currentItem = items.value[currentName] as Item;
-    if (currentItem) {
-      items.value[currentName] = {
-        name: item.name || currentItem.name,
-        value: item.value || currentItem.value,
-        amount: item.amount || currentItem.amount,
-        people: item.people || currentItem.people,
-      }
+    const names = items.value.map((item: Item) => item.name)
+    if (!names.includes(item.name)) {
+      items.value.push(item)
     }
   }
+
+  function editItem(name: string, item: Item) {
+    const idx = items.value.findIndex((item) => item.name === name)
+    if (idx >= 0) {
+      items.value[idx] = item
+    }
+  }
+
   function removeItem(name: string) {
-    delete items.value[name];
+    const idx = items.value.findIndex((item) => item.name === name)
+    if (idx >= 0) {
+      items.value = items.value.splice(idx, 1)
+    }
   }
 
-  // Internal functions
-  function reassignItems(oldName: string, newName: string) {
-    for (const itemName of Object.keys(items.value)) {
-      if (items.value[itemName].people[oldName]) {
-        items.value[itemName].people[newName] = items.value[itemName].people[oldName];
-        delete items.value[itemName].people[oldName];
+  function findItem(name: string) {
+    return items.value.find((item) => item.name === name)!
+  }
+
+  function addOrder(order: Order) {
+    orders.value.push(order)
+  }
+
+  function editOrder(index: number, newOrder: Order) {
+    orders.value[index] = newOrder
+  }
+
+  function removeOrder(index: number) {
+    orders.value = orders.value.splice(index, 1)
+  }
+
+  function reassignOrders(currentName: string, newName: string) {
+    for (const orderIdx in orders.value) {
+      const currentPeople = orders.value[orderIdx].people
+      if (currentPeople.includes(currentName)) {
+        editOrder(parseInt(orderIdx, 10), {
+          ...orders.value[orderIdx],
+          people: currentPeople.map((person) => (person === currentName ? newName : person)),
+        })
       }
     }
   }
-  function removeAssignmentOfItem(name: string) {
-    for (const itemName of Object.keys(items.value)) {
-      delete items.value[itemName].people[name];
+
+  function deassignOrders(name: string) {
+    const deassignableOrders = orders.value.reduce((acc: number[], curr: Order, idx: number) => {
+      if (curr.people.includes(name)) acc.push(idx)
+      return acc
+    }, [])
+
+    for (const idx of deassignableOrders) {
+      const newPeople = orders.value[idx].people.filter((person: string) => person !== name)
+      if (newPeople.length >= 1) {
+        editOrder(idx, {
+          ...orders.value[idx],
+          people: newPeople,
+        })
+      } else if (newPeople.length === 0) {
+        removeOrder(idx)
+      }
     }
   }
-  function calculateTabValue(item: Item, name: string) {
-    const val = item.value * item.amount * item.people[name];
-    const intPart = Math.floor(val / Object.values(item.people).reduce((acc, curr) => acc + curr, 0));
-    const floatPart = val % item.people.length;
-    return { tabValue: intPart, leftoverCents: floatPart };
-  }
-  function buildTabs() {
-    const result = {} as { [key: string]: Item[] };
-    for (const person of people.value) {
-      result[person] = getPersonTab(person);
-    }
-    return result;
-  }
-  function getPersonTab(name: string) {
-    const orderedItems = Object.values(items.value).filter((item) => Object.keys(item.people).includes(name));
-    return orderedItems.map((item) => ({ ...item, ...calculateTabValue(item, name) }))
-  };
 
+  function calculateOrderValue(order: Order): PersonOrder {
+    const item = items.value.find((item: Item) => item.name === order.item)
+    const price = Math.floor((item!.value * order.amount) / order.people.length)
+    const leftoverCents = (item!.value * order.amount) % order.people.length
+    return { ...order, price, leftoverCents }
+  }
 
-  return { people, editPerson, addPerson, removePerson, items, addItem, editItem, removeItem, getPersonTab, totalValue, itemCount, peopleCount, tabs }
+  return {
+    people,
+    items,
+    orders,
+    tabs,
+    totalTableValue,
+    addPerson,
+    editPerson,
+    removePerson,
+    findItem,
+    addItem,
+    editItem,
+    removeItem,
+    addOrder,
+    editOrder,
+    removeOrder,
+  }
 })
