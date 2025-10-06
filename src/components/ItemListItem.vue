@@ -8,17 +8,24 @@ interface Item {
   value: number
 }
 
+enum Mode {
+  View,
+  Edit,
+  Create,
+}
+
 const props = defineProps<{
-  item: Item
+  item?: Item
+  mode: number
 }>()
 
-const emit = defineEmits(['editItem', 'deleteItem'])
+const emit = defineEmits(['editItem', 'deleteItem', 'addItem'])
 
-const editMode = ref(false)
+const mode = ref(props.mode)
 
-const name = ref(props.item.name)
-const value = ref(props.item.value)
-const maskedValue = ref(props.item.value)
+const name = ref(props.item ? props.item.name : '')
+const value = ref(props.item ? props.item.value : 0)
+const maskedValue = ref(props.item ? props.item.value : 0)
 
 function editItem() {
   const item = {
@@ -27,7 +34,17 @@ function editItem() {
   }
 
   emit('editItem', props.item.name, item)
-  editMode.value = false
+  mode.value = Mode.View
+}
+
+function addItem() {
+  const item = {
+    name: name.value,
+    value: value.value,
+  }
+
+  emit('addItem', item)
+  mode.value = Mode.View
 }
 
 const maskOptions = {
@@ -41,12 +58,12 @@ const maskOptions = {
 defineExpose({ value })
 </script>
 <template>
-  <div class="list-row" v-if="!editMode">
+  <div class="list-row" v-if="mode === Mode.View">
     <div class="list-col-grow flex items-center">{{ name }} ({{ formatMoney(value) }})</div>
-    <button class="btn" @click="editMode = true">
+    <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn" @click="$emit('deleteItem', item.name)">
+    <button class="btn" @click="$emit('deleteItem', item!.name)">
       <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>
@@ -61,9 +78,9 @@ defineExpose({ value })
         <input v-maska:value.unmasked="maskOptions" v-model="maskedValue" class="input" />
       </fieldset>
       <fieldset class="fieldset">
-        <button class="btn" @click="editItem">
+        <button class="btn" @click="mode === Mode.Create ? addItem() : editItem()">
           <v-icon class="mx-1" name="bi-check-lg"></v-icon>
-          Atualizar item
+          {{ mode === Mode.Create ? 'Adicionar' : 'Atualizar' }} item
         </button>
       </fieldset>
     </div>

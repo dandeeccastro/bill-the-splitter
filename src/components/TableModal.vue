@@ -15,7 +15,9 @@ import OrderListItem from '@/components/OrderListItem.vue'
 const store = useTableStore()
 
 const selectedTab = ref('Pedidos')
+
 const createPerson = ref(false)
+const createItem = ref(false)
 
 function addMockOrder() {
   const person = `Pessoa ${store.people.length}`
@@ -28,6 +30,11 @@ function addMockOrder() {
 function addPerson(person: string) {
   store.addPerson(person)
   createPerson.value = false
+}
+
+function addItem(item: Item) {
+  store.addItem(item)
+  createItem.value = false
 }
 </script>
 
@@ -79,17 +86,14 @@ function addPerson(person: string) {
             v-for="item of store.items"
             :key="item.name"
             :item="item"
+            :mode="FieldModes.View"
             @editItem="store.editItem"
             @deleteItem="store.removeItem"
           ></ItemListItem>
-          <div class="list-row flex justify-center">
-            <button
-              class="btn btn-primary"
-              @click="store.addItem({ name: `Item ${store.items.length}`, value: 0 })"
-            >
-              Adicionar item
-            </button>
+          <div v-if="!createItem" class="list-row flex justify-center">
+            <button class="btn btn-primary" @click="createItem = true">Adicionar item</button>
           </div>
+          <ItemListItem v-else :mode="FieldModes.Create" @addItem="addItem"></ItemListItem>
         </div>
       </div>
       <div v-else-if="selectedTab === 'Pessoas'">
