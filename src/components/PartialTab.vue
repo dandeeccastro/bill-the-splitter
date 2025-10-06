@@ -39,7 +39,7 @@ function hasOrderedSomething(name: string): boolean {
       </div>
     </div>
     <div class="text-lg text-right w-full px-4">
-      <!-- Centavos sobrando: {{ formatMoney(leftoverCents) }} -->
+      Centavos sobrando: {{ formatMoney(store.tableTab.leftoverCents) }}
     </div>
   </div>
   <div v-else class="h-128 flex justify-center items-center text-center text-xl mx-8">

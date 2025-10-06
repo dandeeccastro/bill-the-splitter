@@ -153,6 +153,10 @@ export const useTableStore = defineStore('table', () => {
         .filter((order: Order) => order.people.includes(person))
         .map(calculateOrderValue)
 
+      if (personOrders.length === 0) {
+        return acc
+      }
+
       const tabValue = personOrders.reduce((acc: number, curr: PersonOrder) => acc + curr.price, 0)
       const totalTabValue = tabValue + Math.floor((tabValue * serviceTax.value) / 100)
       acc[person] = { orders: personOrders, tabValue, totalTabValue }

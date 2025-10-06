@@ -2,6 +2,24 @@ import { setActivePinia, createPinia } from 'pinia'
 import { expect, it, describe, beforeEach } from 'vitest'
 import { useTableStore } from '../src/stores/table'
 
+describe('Table Store Tab Functionality', () => {
+  beforeEach(() => {
+    setActivePinia(createPinia())
+  })
+
+  it('should not create a tab for people with no orders', () => {
+    const store = useTableStore()
+
+    store.addPerson('Foo')
+    store.addPerson('Bar')
+    store.addItem({ name: 'Comida', value: 1299 })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo'] })
+
+    expect(Object.keys(store.tableTab.tabs)).toContain('Foo')
+    expect(Object.keys(store.tableTab.tabs)).not.toContain('Bar')
+  })
+})
+
 describe('Table Store Math Functions', () => {
   beforeEach(() => {
     setActivePinia(createPinia())
