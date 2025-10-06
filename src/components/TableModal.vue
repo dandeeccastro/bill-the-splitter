@@ -2,6 +2,12 @@
 import { ref } from 'vue'
 import { useTableStore } from '@/stores/table'
 
+enum FieldModes {
+  View,
+  Edit,
+  Create,
+}
+
 import PersonListItem from '@/components/PersonListItem.vue'
 import ItemListItem from '@/components/ItemListItem.vue'
 import OrderListItem from '@/components/OrderListItem.vue'
@@ -9,6 +15,7 @@ import OrderListItem from '@/components/OrderListItem.vue'
 const store = useTableStore()
 
 const selectedTab = ref('Pedidos')
+const createPerson = ref(false)
 
 function addMockOrder() {
   const person = `Pessoa ${store.people.length}`
@@ -16,6 +23,11 @@ function addMockOrder() {
   store.addPerson(person)
   store.addItem(item)
   store.addOrder({ amount: 1, item: item.name, people: [person] })
+}
+
+function addPerson(person: string) {
+  store.addPerson(person)
+  createPerson.value = false
 }
 </script>
 
@@ -86,17 +98,14 @@ function addMockOrder() {
             v-for="person of store.people"
             :key="person"
             :person="person"
+            :mode="FieldModes.View"
             @editPerson="store.editPerson"
             @deletePerson="store.removePerson"
           ></PersonListItem>
-          <div class="list-row flex justify-center">
-            <button
-              class="btn btn-primary"
-              @click="store.addPerson(`Pessoa ${store.people.length}`)"
-            >
-              Adicionar pessoa
-            </button>
+          <div v-if="!createPerson" class="list-row flex justify-center">
+            <button class="btn btn-primary" @click="createPerson = true">Adicionar pessoa</button>
           </div>
+          <PersonListItem v-else :mode="FieldModes.Create" @addPerson="addPerson"></PersonListItem>
         </div>
       </div>
     </div>
