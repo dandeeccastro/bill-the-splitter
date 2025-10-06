@@ -79,8 +79,28 @@ describe('Table Store Math Functions', () => {
       store.addOrder({ amount: order.amount, item: order.item.name, people: order.people })
     }
 
-    // TODO: add leftoverCents to test case
     expect(store.tableTab.tabs['Foo'].totalTabValue).toBe(store.tableTab.tabs['Bar'].totalTabValue)
     expect(store.tableTab.tabs['Foo'].totalTabValue).toBe(3973)
+    expect(store.tableTab.leftoverCents).toBe(1)
+  })
+
+  it('should split a bill between three people and calculate leftover cents correctly', () => {
+    const store = useTableStore()
+    const orders = [
+      { item: { name: 'Lorem Ipsum', value: 10000 }, amount: 1, people: ['Foo', 'Bar', 'Baz'] },
+    ]
+
+    store.serviceTax = 0
+    store.addPerson('Foo')
+    store.addPerson('Bar')
+    store.addPerson('Baz')
+
+    for (const order of orders) {
+      store.addItem(order.item)
+      store.addOrder({ ...order, item: order.item.name })
+    }
+
+    expect(store.tableTab.tabs['Foo'].totalTabValue).toBe(3333)
+    expect(store.tableTab.leftoverCents).toBe(1)
   })
 })
