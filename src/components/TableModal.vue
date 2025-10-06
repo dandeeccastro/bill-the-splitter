@@ -20,6 +20,8 @@ const createPerson = ref(false)
 const createItem = ref(false)
 const createOrder = ref(false)
 
+const editTax = ref(false)
+
 function addOrder(order: { item: string; amount: number; people: Array<string> }) {
   store.addOrder(order)
   createOrder.value = false
@@ -39,7 +41,9 @@ function addItem(item: { name: string; value: number }) {
 <template>
   <dialog class="modal" id="tableEditModal">
     <div class="modal-box h-7/10">
-      <h3 class="text-2xl w-full text-center">Editar {{ selectedTab }}</h3>
+      <div class="h-16 flex items-center">
+        <h3 class="text-2xl w-full text-center">Editar Mesa</h3>
+      </div>
       <div class="tabs tabs-border overflow-x-scroll flex-nowrap">
         <a
           role="tab"
@@ -62,9 +66,16 @@ function addItem(item: { name: string; value: number }) {
           @click="selectedTab = 'Itens'"
           >Itens</a
         >
+        <a
+          role="tab"
+          class="tab"
+          :class="{ 'tab-active': selectedTab === 'Outros' }"
+          @click="selectedTab = 'Outros'"
+          >Outros</a
+        >
       </div>
-      <div v-if="selectedTab === 'Pedidos'">
-        <div class="list">
+      <div class="list">
+        <div v-if="selectedTab === 'Pedidos'">
           <OrderListItem
             v-for="(order, index) of store.orders"
             :order="order"
@@ -79,9 +90,7 @@ function addItem(item: { name: string; value: number }) {
           </div>
           <OrderListItem v-else :mode="FieldModes.Create" @addOrder="addOrder"></OrderListItem>
         </div>
-      </div>
-      <div v-else-if="selectedTab === 'Itens'">
-        <div class="list">
+        <div v-else-if="selectedTab === 'Itens'">
           <ItemListItem
             v-for="(item, index) of store.items"
             :key="item.name"
@@ -96,9 +105,7 @@ function addItem(item: { name: string; value: number }) {
           </div>
           <ItemListItem v-else :mode="FieldModes.Create" @addItem="addItem"></ItemListItem>
         </div>
-      </div>
-      <div v-else-if="selectedTab === 'Pessoas'">
-        <div class="list">
+        <div v-else-if="selectedTab === 'Pessoas'">
           <PersonListItem
             v-for="(person, index) of store.people"
             :key="person"
@@ -112,6 +119,22 @@ function addItem(item: { name: string; value: number }) {
             <button class="btn btn-primary" @click="createPerson = true">Adicionar pessoa</button>
           </div>
           <PersonListItem v-else :mode="FieldModes.Create" @addPerson="addPerson"></PersonListItem>
+        </div>
+        <div v-else>
+          <div v-if="!editTax" class="list-row">
+            <div class="list-col-grow flex items-center">
+              <span class="text-xl">Taxa de serviço: {{ store.serviceTax }}%</span>
+            </div>
+            <button class="btn" @click="editTax = true">
+              <v-icon class="mx-1" name="md-edit"></v-icon>
+            </button>
+          </div>
+          <div v-else class="list-row">
+            <input id="serviceTax" type="number" class="input" v-model="store.serviceTax" />
+            <button class="btn" @click="editTax = false">
+              <v-icon class="mx-1" name="bi-check-lg"></v-icon>
+            </button>
+          </div>
         </div>
       </div>
     </div>
