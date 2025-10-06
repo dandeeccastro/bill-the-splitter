@@ -23,28 +23,32 @@ interface PersonTab {
   totalTabValue: number
 }
 
+interface TableTab {
+  tabs: { [key: string]: PersonTab }
+  leftoverCents: number
+}
+
 export const useTableStore = defineStore('table', () => {
   const people = ref([] as Array<string>)
   const items = ref([] as Array<Item>)
   const orders = ref([] as Array<Order>)
   const serviceTax = ref(12)
 
-  const tabs = computed(() => {
-    return people.value.reduce((acc: { [key: string]: PersonTab }, person: string) => {
-      const personOrders = orders.value
-        .filter((order: Order) => order.people.includes(person))
-        .map((order: Order) => calculateOrderValue(order))
-      const tabValue = personOrders.reduce((acc: number, curr: PersonOrder) => acc + curr.price, 0)
-      const totalTabValue = tabValue + Math.floor((tabValue * serviceTax.value) / 100)
-      acc[person] = { orders: personOrders, tabValue, totalTabValue }
-      return acc
-    }, {})
-  })
+  const tableTab = computed(calculateTableTab)
+
+  function resetTable() {
+    people.value = []
+    items.value = []
+    orders.value = []
+    serviceTax.value = 0
+  }
 
   const totalTableValue = computed(() => {
-    return Object.values(tabs.value)
-      .flat()
-      .reduce((acc, curr) => acc + curr.totalTabValue, 0)
+    const fullValue = orders.value.reduce((acc: number, order: Order) => {
+      const item = items.value.find((item: Item) => item.name === order.item)
+      return acc + item!.value * order.amount
+    }, 0)
+    return fullValue + Math.floor((fullValue * serviceTax.value) / 100)
   })
 
   function addPerson(name: string) {
@@ -144,11 +148,57 @@ export const useTableStore = defineStore('table', () => {
     return { ...order, price, leftoverCents }
   }
 
+  function calculateTableTab(): TableTab {
+    // Calculating tabs with tab values (no cents)
+    const allTabs = people.value.reduce((acc: { [key: string]: PersonTab }, person: string) => {
+      const personOrders = orders.value
+        .filter((order: Order) => order.people.includes(person))
+        .map((order: Order) => {
+          const item = items.value.find((item: Item) => item.name === order.item)
+          const price = Math.floor((item!.value * order.amount) / order.people.length)
+          return { ...order, price }
+        })
+
+      const totalValue = personOrders.reduce(
+        (acc: number, curr: PersonOrder) => acc + curr.price,
+        0,
+      )
+      const totalTabValue = totalValue + Math.floor((totalValue * serviceTax.value) / 100)
+      acc[person] = { orders: personOrders, totalValue, totalTabValue }
+      return acc
+    }, {})
+
+    // How many cents left?
+    let leftoverCents = totalTableValue.value
+    for (const person in allTabs) {
+      leftoverCents -= allTabs[person].totalTabValue
+    }
+
+    // How should we divide them?
+    const centsToDivide = Math.floor(leftoverCents / Object.keys(allTabs).length)
+    const actualLeftoverCents = leftoverCents % Object.keys(allTabs).length
+
+    const correctTabs = Object.keys(allTabs).reduce(
+      (acc: { [key: string]: PersonTab }, person: string) => {
+        acc[person] = {
+          ...allTabs[person],
+          totalValue: allTabs[person].totalValue + centsToDivide,
+          totalTabValue: allTabs[person].totalTabValue + centsToDivide,
+        }
+        return acc
+      },
+      {},
+    )
+
+    return { tabs: correctTabs, leftoverCents: actualLeftoverCents }
+  }
+
   return {
     people,
     items,
     orders,
-    tabs,
+    tableTab,
+    serviceTax,
     totalTableValue,
     addPerson,
     editPerson,
@@ -160,5 +210,6 @@ export const useTableStore = defineStore('table', () => {
     addOrder,
     editOrder,
     removeOrder,
+    resetTable,
   }
 })
