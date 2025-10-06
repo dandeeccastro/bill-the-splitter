@@ -49,9 +49,12 @@ function addMockOrder() {
       <div v-if="selectedTab === 'Pedidos'">
         <div class="list">
           <OrderListItem
-            v-for="order of store.orders"
+            v-for="(order, index) of store.orders"
             :order="order"
+            :index="index"
             :key="order.toString()"
+            @editOrder="store.editOrder"
+            @deleteOrder="store.removeOrder"
           ></OrderListItem>
           <div class="list-row flex justify-center">
             <button class="btn btn-primary" @click="addMockOrder">Adicionar pedido</button>

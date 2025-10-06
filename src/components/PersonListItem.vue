@@ -25,15 +25,11 @@ async function toggleEdit() {
 <template>
   <div class="list-row" v-if="!editMode">
     <div class="list-col-grow flex items-center">{{ editablePerson }}</div>
-    <button class="btn">
-      <v-icon class="mx-1" name="md-edit" @click="toggleEdit"></v-icon>
+    <button class="btn" @click="toggleEdit">
+      <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn">
-      <v-icon
-        class="mx-1"
-        name="md-delete-outlined"
-        @click="$emit('deletePerson', props.person)"
-      ></v-icon>
+    <button class="btn" @click="$emit('deletePerson', props.person)">
+      <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>
   <div class="list-row" v-else>
@@ -44,8 +40,8 @@ async function toggleEdit() {
       :placeholder="props.person"
       class="input list-col-grow"
     />
-    <button class="btn">
-      <v-icon class="mx-1 h-full" name="bi-check-lg" @click="editPerson"></v-icon>
+    <button class="btn" @click="editPerson">
+      <v-icon class="mx-1 h-full" name="bi-check-lg"></v-icon>
     </button>
   </div>
 </template>

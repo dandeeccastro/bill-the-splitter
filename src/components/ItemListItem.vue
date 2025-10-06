@@ -43,15 +43,11 @@ defineExpose({ value })
 <template>
   <div class="list-row" v-if="!editMode">
     <div class="list-col-grow flex items-center">{{ name }} ({{ formatMoney(value) }})</div>
-    <button class="btn">
-      <v-icon class="mx-1" name="md-edit" @click="editMode = true"></v-icon>
+    <button class="btn" @click="editMode = true">
+      <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn">
-      <v-icon
-        class="mx-1"
-        name="md-delete-outlined"
-        @click="$emit('deleteItem', item.name)"
-      ></v-icon>
+    <button class="btn" @click="$emit('deleteItem', item.name)">
+      <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>
   <div class="list-row" v-else>
