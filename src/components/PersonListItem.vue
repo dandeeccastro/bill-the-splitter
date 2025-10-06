@@ -8,12 +8,12 @@ enum Mode {
 }
 
 const props = defineProps<{
-  person: string
+  person?: string
   mode: number
 }>()
 
 const mode = ref(props.mode)
-const editablePerson = ref(mode.value === Mode.Create ? '' : props.person)
+const editablePerson = ref(props.person || '')
 
 const emit = defineEmits(['editPerson', 'deletePerson', 'addPerson'])
 
