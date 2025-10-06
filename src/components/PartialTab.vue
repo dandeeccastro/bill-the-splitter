@@ -6,14 +6,14 @@ import { formatMoney } from '@/services/currency'
 const store = useTableStore()
 
 function hasOrderedSomething(name: string): boolean {
-  return store.tabs[name].orders.length > 0
+  return store.tableTab.tabs[name].orders.length > 0
 }
 </script>
 
 <template>
   <div v-if="store.totalTableValue > 0">
     <div
-      v-for="person of Object.keys(store.tabs).filter(hasOrderedSomething)"
+      v-for="person of Object.keys(store.tableTab.tabs).filter(hasOrderedSomething)"
       :key="person"
       class="card shadow"
     >
@@ -21,7 +21,7 @@ function hasOrderedSomething(name: string): boolean {
         <h2 class="card-title">{{ person }}</h2>
         <table class="table table-sm">
           <tbody>
-            <tr v-for="order of store.tabs[person].orders" :key="order.item">
+            <tr v-for="order of store.tableTab.tabs[person].orders" :key="order.item">
               <td>
                 <!-- {{ order.people[person] }}/{{
                   Object.values(order.people).reduce((acc, curr) => acc + curr, 0)
@@ -32,7 +32,7 @@ function hasOrderedSomething(name: string): boolean {
             </tr>
             <tr>
               <td class="font-bold uppercase text-md">Total</td>
-              <td>= {{ formatMoney(store.tabs[person].tabValue) }}</td>
+              <td>= {{ formatMoney(store.tableTab.tabs[person].tabValue) }}</td>
             </tr>
           </tbody>
         </table>

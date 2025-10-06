@@ -14,7 +14,6 @@ interface Order {
 
 interface PersonOrder extends Order {
   price: number
-  leftoverCents: number
 }
 
 interface PersonTab {
@@ -144,8 +143,7 @@ export const useTableStore = defineStore('table', () => {
   function calculateOrderValue(order: Order): PersonOrder {
     const item = items.value.find((item: Item) => item.name === order.item)
     const price = Math.floor((item!.value * order.amount) / order.people.length)
-    const leftoverCents = (item!.value * order.amount) % order.people.length
-    return { ...order, price, leftoverCents }
+    return { ...order, price }
   }
 
   function calculateTableTab(): TableTab {
@@ -153,18 +151,11 @@ export const useTableStore = defineStore('table', () => {
     const allTabs = people.value.reduce((acc: { [key: string]: PersonTab }, person: string) => {
       const personOrders = orders.value
         .filter((order: Order) => order.people.includes(person))
-        .map((order: Order) => {
-          const item = items.value.find((item: Item) => item.name === order.item)
-          const price = Math.floor((item!.value * order.amount) / order.people.length)
-          return { ...order, price }
-        })
+        .map(calculateOrderValue)
 
-      const totalValue = personOrders.reduce(
-        (acc: number, curr: PersonOrder) => acc + curr.price,
-        0,
-      )
-      const totalTabValue = totalValue + Math.floor((totalValue * serviceTax.value) / 100)
-      acc[person] = { orders: personOrders, totalValue, totalTabValue }
+      const tabValue = personOrders.reduce((acc: number, curr: PersonOrder) => acc + curr.price, 0)
+      const totalTabValue = tabValue + Math.floor((tabValue * serviceTax.value) / 100)
+      acc[person] = { orders: personOrders, tabValue, totalTabValue }
       return acc
     }, {})
 
@@ -182,7 +173,7 @@ export const useTableStore = defineStore('table', () => {
       (acc: { [key: string]: PersonTab }, person: string) => {
         acc[person] = {
           ...allTabs[person],
-          totalValue: allTabs[person].totalValue + centsToDivide,
+          tabValue: allTabs[person].tabValue + centsToDivide,
           totalTabValue: allTabs[person].totalTabValue + centsToDivide,
         }
         return acc
