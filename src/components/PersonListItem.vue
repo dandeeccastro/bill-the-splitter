@@ -9,6 +9,7 @@ enum Mode {
 
 const props = defineProps<{
   person?: string
+  index?: number
   mode: number
 }>()
 
@@ -18,7 +19,7 @@ const editablePerson = ref(props.person || '')
 const emit = defineEmits(['editPerson', 'deletePerson', 'addPerson'])
 
 function editPerson() {
-  emit('editPerson', props.person, editablePerson.value)
+  emit('editPerson', props.index, editablePerson.value)
   mode.value = Mode.View
 }
 
@@ -40,7 +41,7 @@ async function toggleEdit() {
     <button class="btn" @click="toggleEdit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn" @click="$emit('deletePerson', props.person)">
+    <button class="btn" @click="$emit('deletePerson', props.index)">
       <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>

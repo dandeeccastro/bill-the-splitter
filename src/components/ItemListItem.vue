@@ -16,6 +16,7 @@ enum Mode {
 
 const props = defineProps<{
   item?: Item
+  index?: number
   mode: number
 }>()
 
@@ -33,7 +34,7 @@ function editItem() {
     value: value.value,
   }
 
-  emit('editItem', props.item!.name, item)
+  emit('editItem', props.index, item)
   mode.value = Mode.View
 }
 
@@ -63,7 +64,7 @@ defineExpose({ value })
     <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn" @click="$emit('deleteItem', item!.name)">
+    <button class="btn" @click="$emit('deleteItem', props.index)">
       <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>

@@ -68,9 +68,9 @@ function addItem(item: { name: string; value: number }) {
           <OrderListItem
             v-for="(order, index) of store.orders"
             :order="order"
-            :index="index"
+            :key="`${order.amount}-${order.item}-${index}`"
             :mode="FieldModes.View"
-            :key="order.toString()"
+            :index="index"
             @editOrder="store.editOrder"
             @deleteOrder="store.removeOrder"
           ></OrderListItem>
@@ -83,9 +83,10 @@ function addItem(item: { name: string; value: number }) {
       <div v-else-if="selectedTab === 'Itens'">
         <div class="list">
           <ItemListItem
-            v-for="item of store.items"
+            v-for="(item, index) of store.items"
             :key="item.name"
             :item="item"
+            :index="index"
             :mode="FieldModes.View"
             @editItem="store.editItem"
             @deleteItem="store.removeItem"
@@ -99,9 +100,10 @@ function addItem(item: { name: string; value: number }) {
       <div v-else-if="selectedTab === 'Pessoas'">
         <div class="list">
           <PersonListItem
-            v-for="person of store.people"
+            v-for="(person, index) of store.people"
             :key="person"
             :person="person"
+            :index="index"
             :mode="FieldModes.View"
             @editPerson="store.editPerson"
             @deletePerson="store.removePerson"

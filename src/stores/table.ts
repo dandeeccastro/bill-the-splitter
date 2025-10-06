@@ -56,20 +56,15 @@ export const useTableStore = defineStore('table', () => {
     }
   }
 
-  function editPerson(currentName: string, newName: string) {
-    const personIdx = people.value.indexOf(currentName)
-    if (personIdx >= 0) {
-      people.value[personIdx] = newName
-      reassignOrders(currentName, newName)
-    }
+  function editPerson(index: number, newName: string) {
+    people.value[index] = newName
+    reassignOrdersToPerson(index, newName)
   }
 
-  function removePerson(name: string) {
-    const idx = people.value.indexOf(name)
-    if (idx >= 0) {
-      people.value = people.value.splice(idx, 1)
-      deassignOrders(name)
-    }
+  function removePerson(idx: number) {
+    const name = people.value[idx]
+    people.value.splice(idx, 1)
+    deassignOrdersFromPerson(name)
   }
 
   function addItem(item: Item) {
@@ -79,18 +74,16 @@ export const useTableStore = defineStore('table', () => {
     }
   }
 
-  function editItem(name: string, item: Item) {
-    const idx = items.value.findIndex((item) => item.name === name)
-    if (idx >= 0) {
-      items.value[idx] = item
-    }
+  function editItem(idx: number, item: Item) {
+    const oldName = items.value[idx].name
+    items.value[idx] = item
+    reassignOrdersForItem(oldName, item.name)
   }
 
-  function removeItem(name: string) {
-    const idx = items.value.findIndex((item) => item.name === name)
-    if (idx >= 0) {
-      items.value = items.value.splice(idx, 1)
-    }
+  function removeItem(idx: number) {
+    const name = items.value[idx].name
+    items.value.splice(idx, 1)
+    deassignOrdersForItem(name)
   }
 
   function findItem(name: string) {
@@ -106,10 +99,11 @@ export const useTableStore = defineStore('table', () => {
   }
 
   function removeOrder(index: number) {
-    orders.value = orders.value.splice(index, 1)
+    orders.value.splice(index, 1)
   }
 
-  function reassignOrders(currentName: string, newName: string) {
+  function reassignOrdersToPerson(personIndex: number, newName: string) {
+    const currentName = people.value[personIndex]
     for (const orderIdx in orders.value) {
       const currentPeople = orders.value[orderIdx].people
       if (currentPeople.includes(currentName)) {
@@ -121,11 +115,13 @@ export const useTableStore = defineStore('table', () => {
     }
   }
 
-  function deassignOrders(name: string) {
-    const deassignableOrders = orders.value.reduce((acc: number[], curr: Order, idx: number) => {
-      if (curr.people.includes(name)) acc.push(idx)
-      return acc
-    }, [])
+  function deassignOrdersFromPerson(name: string) {
+    const deassignableOrders = orders.value
+      .reduce((acc: number[], curr: Order, idx: number) => {
+        if (curr.people.includes(name)) acc.push(idx)
+        return acc
+      }, [])
+      .sort((a, b) => b - a)
 
     for (const idx of deassignableOrders) {
       const newPeople = orders.value[idx].people.filter((person: string) => person !== name)
@@ -138,6 +134,24 @@ export const useTableStore = defineStore('table', () => {
         removeOrder(idx)
       }
     }
+  }
+
+  function reassignOrdersForItem(oldName: string, newName: string) {
+    orders.value = orders.value.map((order) => ({
+      ...order,
+      item: order.item === oldName ? newName : order.item,
+    }))
+  }
+
+  function deassignOrdersForItem(name: string) {
+    const deassignableOrders = orders.value
+      .reduce((acc: number[], curr: Order, idx: number) => {
+        if (curr.item === name) acc.push(idx)
+        return acc
+      }, [])
+      .sort((a, b) => b - a)
+
+    for (const idx of deassignableOrders) removeOrder(idx)
   }
 
   function calculateOrderValue(order: Order): PersonOrder {

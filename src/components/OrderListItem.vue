@@ -60,12 +60,8 @@ function addOrder() {
     <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn">
-      <v-icon
-        class="mx-1"
-        name="md-delete-outlined"
-        @click="$emit('deleteOrder', props.index)"
-      ></v-icon>
+    <button class="btn" @click="$emit('deleteOrder', props.index)">
+      <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>
   <div class="list-row" v-else>
