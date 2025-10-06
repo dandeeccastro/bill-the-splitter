@@ -16,7 +16,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   const tableModal = document.getElementById('tableEditModal')
-  tableModal.addEventListener('close', () => {
+  tableModal!.addEventListener('close', () => {
     store.save()
   })
 })
