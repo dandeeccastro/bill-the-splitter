@@ -11,15 +11,12 @@ const selectedTab = ref('Total')
 const store = useTableStore()
 
 onBeforeMount(() => {
-  console.log('[bill] Setting up store from localstorage')
   store.setup()
 })
 
 onMounted(() => {
   const tableModal = document.getElementById('tableEditModal')
-  console.log(tableModal)
   tableModal.addEventListener('close', () => {
-    console.log('ayo')
     store.save()
   })
 })
