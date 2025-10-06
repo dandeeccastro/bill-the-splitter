@@ -20,7 +20,7 @@ const createPerson = ref(false)
 const createItem = ref(false)
 const createOrder = ref(false)
 
-function addOrder(order) {
+function addOrder(order: { item: string; amount: number; people: Array<string> }) {
   store.addOrder(order)
   createOrder.value = false
 }
@@ -30,7 +30,7 @@ function addPerson(person: string) {
   createPerson.value = false
 }
 
-function addItem(item: Item) {
+function addItem(item: { name: string; value: number }) {
   store.addItem(item)
   createItem.value = false
 }

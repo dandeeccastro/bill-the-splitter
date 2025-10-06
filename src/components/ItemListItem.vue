@@ -33,7 +33,7 @@ function editItem() {
     value: value.value,
   }
 
-  emit('editItem', props.item.name, item)
+  emit('editItem', props.item!.name, item)
   mode.value = Mode.View
 }
 
