@@ -24,13 +24,16 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
-      - name: Uploading static files
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist/
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run tests
+        run: pnpm test
 
   deploy:
-    needs: build
+    needs: test
 
     permissions:
       pages: write
@@ -42,5 +45,10 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
+      - name: Uploading static files
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist/
+
       - name: Deploy to GH
         uses: actions/deploy-pages@v4.0.0
