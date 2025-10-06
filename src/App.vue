@@ -1,11 +1,28 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, onBeforeMount } from 'vue'
 
 import TotalTab from '@/components/TotalTab.vue'
 import PartialTab from '@/components/PartialTab.vue'
 import TableModal from '@/components/TableModal.vue'
+import { useTableStore } from './stores/table'
+import { onMounted } from 'vue'
 
 const selectedTab = ref('Total')
+const store = useTableStore()
+
+onBeforeMount(() => {
+  console.log('[bill] Setting up store from localstorage')
+  store.setup()
+})
+
+onMounted(() => {
+  const tableModal = document.getElementById('tableEditModal')
+  console.log(tableModal)
+  tableModal.addEventListener('close', () => {
+    console.log('ayo')
+    store.save()
+  })
+})
 </script>
 
 <template>

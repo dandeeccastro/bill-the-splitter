@@ -35,13 +35,6 @@ export const useTableStore = defineStore('table', () => {
 
   const tableTab = computed(calculateTableTab)
 
-  function resetTable() {
-    people.value = []
-    items.value = []
-    orders.value = []
-    serviceTax.value = 0
-  }
-
   const totalTableValue = computed(() => {
     const fullValue = orders.value.reduce((acc: number, order: Order) => {
       const item = items.value.find((item: Item) => item.name === order.item)
@@ -50,6 +43,35 @@ export const useTableStore = defineStore('table', () => {
     return fullValue + Math.floor((fullValue * serviceTax.value) / 100)
   })
 
+  function setup() {
+    const localServiceTax = window.localStorage.getItem('bill-the-splitter.serviceTax')
+    if (localServiceTax !== null && localServiceTax !== '') {
+      serviceTax.value = parseInt(localServiceTax, 10)
+    }
+
+    const localItems = window.localStorage.getItem('bill-the-splitter.items')
+    if (localItems !== null && localItems !== '') {
+      items.value = JSON.parse(localItems)
+    }
+
+    const localOrders = window.localStorage.getItem('bill-the-splitter.orders')
+    if (localOrders !== null && localOrders !== '') {
+      orders.value = JSON.parse(localOrders)
+    }
+
+    const localPeople = window.localStorage.getItem('bill-the-splitter.people')
+    if (localPeople !== null && localPeople !== '') {
+      people.value = JSON.parse(localPeople)
+    }
+  }
+
+  function save() {
+    window.localStorage.setItem('bill-the-splitter.serviceTax', serviceTax.value.toString())
+    window.localStorage.setItem('bill-the-splitter.items', JSON.stringify(items.value))
+    window.localStorage.setItem('bill-the-splitter.orders', JSON.stringify(orders.value))
+    window.localStorage.setItem('bill-the-splitter.people', JSON.stringify(people.value))
+  }
+
   function addPerson(name: string) {
     if (!people.value.includes(name)) {
       people.value.push(name)
@@ -57,8 +79,9 @@ export const useTableStore = defineStore('table', () => {
   }
 
   function editPerson(index: number, newName: string) {
+    const currentName = people.value[index]
     people.value[index] = newName
-    reassignOrdersToPerson(index, newName)
+    reassignOrdersToPerson(currentName, newName)
   }
 
   function removePerson(idx: number) {
@@ -102,8 +125,7 @@ export const useTableStore = defineStore('table', () => {
     orders.value.splice(index, 1)
   }
 
-  function reassignOrdersToPerson(personIndex: number, newName: string) {
-    const currentName = people.value[personIndex]
+  function reassignOrdersToPerson(currentName: string, newName: string) {
     for (const orderIdx in orders.value) {
       const currentPeople = orders.value[orderIdx].people
       if (currentPeople.includes(currentName)) {
@@ -219,6 +241,7 @@ export const useTableStore = defineStore('table', () => {
     addOrder,
     editOrder,
     removeOrder,
-    resetTable,
+    setup,
+    save,
   }
 })
