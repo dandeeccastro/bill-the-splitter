@@ -18,13 +18,11 @@ const selectedTab = ref('Pedidos')
 
 const createPerson = ref(false)
 const createItem = ref(false)
+const createOrder = ref(false)
 
-function addMockOrder() {
-  const person = `Pessoa ${store.people.length}`
-  const item = { name: `Item ${store.items.length}`, value: 0 }
-  store.addPerson(person)
-  store.addItem(item)
-  store.addOrder({ amount: 1, item: item.name, people: [person] })
+function addOrder(order) {
+  store.addOrder(order)
+  createOrder.value = false
 }
 
 function addPerson(person: string) {
@@ -71,13 +69,15 @@ function addItem(item: Item) {
             v-for="(order, index) of store.orders"
             :order="order"
             :index="index"
+            :mode="FieldModes.View"
             :key="order.toString()"
             @editOrder="store.editOrder"
             @deleteOrder="store.removeOrder"
           ></OrderListItem>
-          <div class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="addMockOrder">Adicionar pedido</button>
+          <div v-if="!createOrder" class="list-row flex justify-center">
+            <button class="btn btn-primary" @click="createOrder = true">Adicionar pedido</button>
           </div>
+          <OrderListItem v-else :mode="FieldModes.Create" @addOrder="addOrder"></OrderListItem>
         </div>
       </div>
       <div v-else-if="selectedTab === 'Itens'">

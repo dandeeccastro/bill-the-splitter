@@ -8,19 +8,26 @@ interface Order {
   item: string
 }
 
+enum Mode {
+  View,
+  Edit,
+  Create,
+}
+
 const store = useTableStore()
-const emit = defineEmits(['editOrder', 'deleteOrder'])
+const emit = defineEmits(['editOrder', 'deleteOrder', 'addOrder'])
 
 const props = defineProps<{
-  order: Order
-  index: number
+  order?: Order
+  index?: number
+  mode: number
 }>()
 
-const amount = ref(props.order.amount)
-const people = ref(props.order.people)
-const item = ref(props.order.item)
+const amount = ref(props.order ? props.order.amount : 0)
+const people = ref(props.order ? props.order.people : [])
+const item = ref(props.order ? props.order.item : '')
 
-const editMode = ref(false)
+const mode = ref(props.mode)
 
 function editOrder() {
   const order = {
@@ -30,16 +37,27 @@ function editOrder() {
   }
 
   emit('editOrder', props.index, order)
-  editMode.value = false
+  mode.value = Mode.View
+}
+
+function addOrder() {
+  const order = {
+    amount: amount.value,
+    people: people.value,
+    item: item.value,
+  }
+
+  emit('addOrder', order)
+  mode.value = Mode.View
 }
 </script>
 
 <template>
-  <div class="list-row" v-if="!editMode">
+  <div class="list-row" v-if="mode === Mode.View">
     <div>{{ amount }}</div>
     <div>{{ item }}</div>
     <div class="list-col-grow">{{ people }}</div>
-    <button class="btn" @click="editMode = true">
+    <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
     <button class="btn">
@@ -73,7 +91,7 @@ function editOrder() {
         </label>
       </fieldset>
       <fieldset class="fieldset">
-        <button class="btn" @click="editOrder">
+        <button class="btn" @click="mode === Mode.Create ? addOrder() : editOrder()">
           <v-icon class="mx-1" name="bi-check-lg"></v-icon>
           Atualizar pedido
         </button>
