@@ -24,16 +24,11 @@ jobs:
       - run: pnpm install
       - run: pnpm build
 
-  test:
-    needs: build
-    runs-on: ubuntu-latest
-
-    steps:
       - name: Run tests
         run: pnpm test
 
   deploy:
-    needs: test
+    needs: build
 
     permissions:
       pages: write
