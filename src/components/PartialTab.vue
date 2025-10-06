@@ -43,7 +43,7 @@ function hasOrderedSomething(name: string): boolean {
     </div>
   </div>
   <div v-else class="h-128 flex justify-center items-center text-center text-xl mx-8">
-    <p>Ainda não há itens adicionados na sua mesa!</p>
+    <p>Ainda não há pedidos adicionados na sua mesa!</p>
   </div>
 </template>
 
