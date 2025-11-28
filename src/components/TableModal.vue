@@ -42,7 +42,7 @@ function addItem(item: { name: string; value: number }) {
   <dialog class="modal" id="tableEditModal">
     <div class="modal-box h-7/10">
       <div class="h-16 flex items-center">
-        <h3 class="text-2xl w-full text-center">Editar Mesa</h3>
+        <h3 class="text-2xl w-full text-center">{{ $t('modal.editTable') }}</h3>
       </div>
       <div class="tabs tabs-border overflow-x-scroll flex-nowrap">
         <a
@@ -50,28 +50,28 @@ function addItem(item: { name: string; value: number }) {
           class="tab"
           :class="{ 'tab-active': selectedTab === 'Pedidos' }"
           @click="selectedTab = 'Pedidos'"
-          >Pedidos</a
+        >{{ $t('modal.orders') }}</a
         >
         <a
           role="tab"
           class="tab"
           :class="{ 'tab-active': selectedTab === 'Pessoas' }"
           @click="selectedTab = 'Pessoas'"
-          >Pessoas</a
+        >{{ $t('modal.people') }}</a
         >
         <a
           role="tab"
           class="tab"
           :class="{ 'tab-active': selectedTab === 'Itens' }"
           @click="selectedTab = 'Itens'"
-          >Itens</a
+        >{{ $t('modal.items') }}</a
         >
         <a
           role="tab"
           class="tab"
           :class="{ 'tab-active': selectedTab === 'Outros' }"
           @click="selectedTab = 'Outros'"
-          >Outros</a
+        >{{ $t('modal.other') }}</a
         >
       </div>
       <div class="list">
@@ -86,7 +86,7 @@ function addItem(item: { name: string; value: number }) {
             @deleteOrder="store.removeOrder"
           ></OrderListItem>
           <div v-if="!createOrder" class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="createOrder = true">Adicionar pedido</button>
+            <button class="btn btn-primary" @click="createOrder = true">{{$t('modal.addOrder')}}</button>
           </div>
           <OrderListItem v-else :mode="FieldModes.Create" @addOrder="addOrder"></OrderListItem>
         </div>
@@ -101,7 +101,7 @@ function addItem(item: { name: string; value: number }) {
             @deleteItem="store.removeItem"
           ></ItemListItem>
           <div v-if="!createItem" class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="createItem = true">Adicionar item</button>
+            <button class="btn btn-primary" @click="createItem = true">{{$t('modal.addItem')}}</button>
           </div>
           <ItemListItem v-else :mode="FieldModes.Create" @addItem="addItem"></ItemListItem>
         </div>
@@ -116,14 +116,14 @@ function addItem(item: { name: string; value: number }) {
             @deletePerson="store.removePerson"
           ></PersonListItem>
           <div v-if="!createPerson" class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="createPerson = true">Adicionar pessoa</button>
+            <button class="btn btn-primary" @click="createPerson = true">{{ $t('modal.addPerson')}}</button>
           </div>
           <PersonListItem v-else :mode="FieldModes.Create" @addPerson="addPerson"></PersonListItem>
         </div>
         <div v-else>
           <div v-if="!editTax" class="list-row">
             <div class="list-col-grow flex items-center">
-              <span class="text-xl">Taxa de serviço: {{ store.serviceTax }}%</span>
+              <span class="text-xl">{{ $t('modal.serviceTax', { tax: store.serviceTax }) }}%</span>
             </div>
             <button class="btn" @click="editTax = true">
               <v-icon class="mx-1" name="md-edit"></v-icon>
@@ -139,7 +139,7 @@ function addItem(item: { name: string; value: number }) {
       </div>
     </div>
     <form method="dialog" class="modal-backdrop">
-      <button>Fechar</button>
+      <button>{{ $t('modal.close') }}</button>
     </form>
   </dialog>
 </template>

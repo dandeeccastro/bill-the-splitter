@@ -28,7 +28,7 @@ const store = useTableStore()
     </tbody>
   </table>
   <div v-else class="h-128 flex justify-center items-center text-center text-xl mx-8">
-    <p>Ainda não há pedidos adicionados na sua mesa!</p>
+    <p>{{ $t('noOrders') }}</p>
   </div>
 </template>
 

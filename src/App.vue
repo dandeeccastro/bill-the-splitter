@@ -28,20 +28,20 @@ onMounted(() => {
     <a
       role="tab"
       class="tab"
-      :class="{ 'tab-active': selectedTab === 'Total' }"
-      @click="selectedTab = 'Total'"
-      >Total</a
+      :class="{ 'tab-active': selectedTab === $t('total') }"
+      @click="selectedTab = $t('total')"
+      >{{ $t('total') }}</a
     >
     <a
       role="tab"
       class="tab"
-      :class="{ 'tab-active': selectedTab === 'Por pessoa' }"
-      @click="selectedTab = 'Por pessoa'"
-      >Por pessoa</a
+      :class="{ 'tab-active': selectedTab === $t('perPerson') }"
+      @click="selectedTab = $t('perPerson')"
+      >{{ $t('perPerson') }}</a
     >
   </div>
-  <TotalTab v-if="selectedTab === 'Total'"></TotalTab>
-  <PartialTab v-if="selectedTab === 'Por pessoa'"></PartialTab>
+  <TotalTab v-if="selectedTab === $t('total')"></TotalTab>
+  <PartialTab v-if="selectedTab === $t('perPerson')"></PartialTab>
   <div class="h-20"></div>
   <button
     class="btn btn-xl btn-circle btn-active absolute bottom-4 right-4 shadow"
