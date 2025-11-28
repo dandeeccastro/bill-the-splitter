@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { ref, onBeforeMount } from 'vue'
+import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 
 import TotalTab from '@/components/TotalTab.vue'
 import PartialTab from '@/components/PartialTab.vue'
@@ -9,9 +11,28 @@ import { onMounted } from 'vue'
 
 const selectedTab = ref('Total')
 const store = useTableStore()
+const route = useRoute()
+const { locale, availableLocales } = useI18n()
+
+function defineLocale() {
+  // Setting by query param
+  const queryLang = route.query?.lang as string
+  if (queryLang && availableLocales.includes(queryLang)) {
+    locale.value = queryLang
+    return
+  }
+  // Setting by system language
+  for (const spokenLocale of navigator.languages) {
+    if (availableLocales.includes(spokenLocale)) {
+      locale.value = spokenLocale
+      return
+    }
+  }
+}
 
 onBeforeMount(() => {
   store.setup()
+  defineLocale()
 })
 
 onMounted(() => {
