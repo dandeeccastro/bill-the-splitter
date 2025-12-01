@@ -15,6 +15,22 @@ const i18n = createI18n({
   legacy: false,
   globalInjection: true,
   fallbackLocale: 'en',
+  numberFormats: {
+    en: {
+      currency: {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'standard',
+      }
+    },
+    pt: {
+      currency: {
+        style: 'currency',
+        currency: 'BRL',
+        notation: 'standard',
+      }
+    },
+  },
   messages: {
     en: {
       total: 'Total',
@@ -64,4 +80,3 @@ app.use(router)
 app.use(i18n)
 
 router.isReady().then(() => app.mount('#app'))
-// app.mount('#app')

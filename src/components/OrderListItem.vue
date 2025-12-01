@@ -56,7 +56,11 @@ function addOrder() {
   <div class="list-row" v-if="mode === Mode.View">
     <div>{{ amount }}</div>
     <div>{{ item }}</div>
-    <div class="list-col-grow">{{ people }}</div>
+    <div class="list-col-grow">
+      <div class='badge badge-primary badge-outline' v-for='person in people'>
+        {{ person }}
+      </div>
+    </div>
     <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>

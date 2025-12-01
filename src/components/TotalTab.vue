@@ -11,19 +11,25 @@ const store = useTableStore()
       <tr v-for="order in store.orders" :key="order.item">
         <td>
           {{ order.amount }} {{ order.item }} ({{
-            formatMoney(store.items.find((item) => item.name === order.item)!.value)
+            $n(
+              store.items.find((item) => item.name === order.item)!.value / 100,
+              'currency'
+            )
           }})
         </td>
         <td>
           =
           {{
-            formatMoney(store.items.find((item) => item.name === order.item)!.value * order.amount)
+            $n(
+              store.items.find((item) => item.name === order.item)!.value * order.amount / 100,
+              'currency'
+            )
           }}
         </td>
       </tr>
       <tr>
         <td class="font-bold uppercase text-md">Total</td>
-        <td>= {{ formatMoney(store.totalTableValue) }}</td>
+        <td>= {{ $n(store.totalTableValue / 100, 'currency') }}</td>
       </tr>
     </tbody>
   </table>

@@ -28,18 +28,18 @@ function hasOrderedSomething(name: string): boolean {
                 }} -->
                 {{ order.item }} ({{ formatMoney(store.findItem(order.item).value) }})
               </td>
-              <td>= {{ formatMoney(order.price || 0) }}</td>
+              <td>= {{ $n(order.price / 100 || 0, 'currency') }}</td>
             </tr>
             <tr>
               <td class="font-bold uppercase text-md">Total</td>
-              <td>= {{ formatMoney(store.tableTab.tabs[person].tabValue) }}</td>
+              <td>= {{ $n(store.tableTab.tabs[person].tabValue / 100, 'currency') }}</td>
             </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div class="text-lg text-right w-full px-4">
-      {{ $t('leftoverCents', formatMoney(store.tableTab.leftoverCents))}}
+      {{ $t('leftoverCents', { cents: $n(store.tableTab.leftoverCents / 100, 'currency')})}}
     </div>
   </div>
   <div v-else class="h-128 flex justify-center items-center text-center text-xl mx-8">
