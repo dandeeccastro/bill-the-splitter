@@ -23,10 +23,7 @@ function hasOrderedSomething(name: string): boolean {
           <tbody>
             <tr v-for="order of store.tableTab.tabs[person].orders" :key="order.item">
               <td>
-                <!-- {{ order.people[person] }}/{{
-                  Object.values(order.people).reduce((acc, curr) => acc + curr, 0)
-                }} -->
-                {{ order.item }} ({{ formatMoney(store.findItem(order.item).value) }})
+                {{ order.item }} ({{ $n(store.findItem(order.item).value / 100, 'currency') }})
               </td>
               <td>= {{ $n(order.price / 100 || 0, 'currency') }}</td>
             </tr>

@@ -60,7 +60,7 @@ defineExpose({ value })
 </script>
 <template>
   <div class="list-row" v-if="mode === Mode.View">
-    <div class="list-col-grow flex items-center">{{ name }} ({{ formatMoney(value) }})</div>
+    <div class="list-col-grow flex items-center">{{ name }} ({{ $n(value/100, 'currency') }})</div>
     <button class="btn" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>

@@ -72,19 +72,19 @@ function addOrder() {
     <div class="list-col-grow">
       <fieldset class="fieldset">
         <select v-model="item" name="item" class="select">
-          <option disabled selected>Escolha um item</option>
+          <option disabled selected>{{ $t('editOrder.chooseItem') }}</option>
           <option v-for="item of store.items" :value="item.name" :key="item.toString()">
             {{ item.name }}
           </option>
         </select>
-        <legend class="fieldset-legend">Item</legend>
+        <legend class="fieldset-legend">{{ $t('editOrder.item') }}</legend>
       </fieldset>
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Quantos?</legend>
+        <legend class="fieldset-legend">{{ $t('editOrder.howMany') }}</legend>
         <input type="number" v-model="amount" class="input" />
       </fieldset>
       <fieldset class="fieldset flex flex-row">
-        <legend class="fieldset-legend">Pedido por</legend>
+        <legend class="fieldset-legend">{{ $t('editOrder.whoOrdered') }}</legend>
         <label class="label mx-1" v-for="person in store.people" :key="person">
           <input type="checkbox" class="checkbox" v-model="people" :value="person" />
           {{ person }}
@@ -93,7 +93,7 @@ function addOrder() {
       <fieldset class="fieldset">
         <button class="btn" @click="mode === Mode.Create ? addOrder() : editOrder()">
           <v-icon class="mx-1" name="bi-check-lg"></v-icon>
-          Atualizar pedido
+          {{ $t('editOrder.updateOrder')}}
         </button>
       </fieldset>
     </div>

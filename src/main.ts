@@ -48,7 +48,14 @@ const i18n = createI18n({
         addPerson: 'Add person',
         serviceTax: 'Service tax: {tax}',
         close: 'Close',
-      }
+      },
+      editOrder: {
+        chooseItem: 'Pick an item',
+        item: 'Item',
+        howMany: 'How many?',
+        whoOrdered: "Who's ordering that?",
+        updateOrder: 'Update order',
+      },
     },
     pt: {
       total: 'Total',
@@ -66,7 +73,14 @@ const i18n = createI18n({
         addPerson: 'Add person',
         serviceTax: 'Service tax: {tax}',
         close: 'Fechar',
-      }
+      },
+      editOrder: {
+        chooseItem: 'Escolha um item',
+        item: 'Item',
+        howMany: 'Quantos?',
+        whoOrdered: "Quem está pedindo?",
+        updateOrder: 'Atualizar pedido',
+      },
     }
   }
 });
