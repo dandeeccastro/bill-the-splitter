@@ -56,15 +56,15 @@ function addOrder() {
   <div class="list-row" v-if="mode === Mode.View">
     <div>{{ amount }}</div>
     <div>{{ item }}</div>
-    <div class="list-col-grow">
-      <div class='badge badge-primary badge-outline' v-for='person in people'>
+    <div class="list-col-wrap">
+      <span class='badge badge-primary badge-outline' v-for='person in people'>
         {{ person }}
-      </div>
+      </span>
     </div>
-    <button class="btn" @click="mode = Mode.Edit">
+    <button class="btn px-1" @click="mode = Mode.Edit">
       <v-icon class="mx-1" name="md-edit"></v-icon>
     </button>
-    <button class="btn" @click="$emit('deleteOrder', props.index)">
+    <button class="btn px-1" @click="$emit('deleteOrder', props.index)">
       <v-icon class="mx-1" name="md-delete-outlined"></v-icon>
     </button>
   </div>
