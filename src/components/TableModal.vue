@@ -4,8 +4,7 @@ import { useTableStore } from '@/stores/table'
 
 enum FieldModes {
   View,
-  Edit,
-  Create,
+  Edit, Create,
 }
 
 import PersonListItem from '@/components/PersonListItem.vue'
@@ -116,14 +115,23 @@ function addItem(item: { name: string; value: number }) {
             @deletePerson="store.removePerson"
           ></PersonListItem>
           <div v-if="!createPerson" class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="createPerson = true">{{ $t('modal.addPerson')}}</button>
+            <button class="btn btn-primary" @click="createPerson = true">
+              {{ $t('modal.addPerson')}}
+            </button>
           </div>
-          <PersonListItem v-else :mode="FieldModes.Create" @addPerson="addPerson"></PersonListItem>
+          <PersonListItem
+            v-else
+            :mode="FieldModes.Create"
+            @addPerson="addPerson"
+            @cancel='createPerson = false'
+          ></PersonListItem>
         </div>
         <div v-else>
           <div v-if="!editTax" class="list-row">
             <div class="list-col-grow flex items-center">
-              <span class="text-xl">{{ $t('modal.serviceTax', { tax: store.serviceTax }) }}%</span>
+              <span class="text-xl">
+                {{ $t('modal.serviceTax', { tax: store.serviceTax }) }}%
+              </span>
             </div>
             <button class="btn" @click="editTax = true">
               <v-icon class="mx-1" name="md-edit"></v-icon>

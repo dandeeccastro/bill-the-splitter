@@ -16,7 +16,7 @@ const props = defineProps<{
 const mode = ref(props.mode)
 const editablePerson = ref(props.person || '')
 
-const emit = defineEmits(['editPerson', 'deletePerson', 'addPerson'])
+const emit = defineEmits(['editPerson', 'deletePerson', 'addPerson', 'cancel'])
 
 function editPerson() {
   emit('editPerson', props.index, editablePerson.value)
@@ -47,8 +47,17 @@ async function toggleEdit() {
   </div>
   <div class="list-row" v-else>
     <input :id="editablePerson" type="text" v-model="editablePerson" class="input list-col-grow" />
-    <button class="btn" @click="mode === Mode.Create ? createPerson() : editPerson()">
+    <button
+      class="btn"
+      @click="mode === Mode.Create ? createPerson() : editPerson()"
+    >
       <v-icon class="mx-1 h-full" name="bi-check-lg"></v-icon>
+    </button>
+    <button
+      class='btn'
+      @click='$emit("cancel")'
+    >
+      <v-icon class="mx-1 h-full" name="io-close"></v-icon>
     </button>
   </div>
 </template>
