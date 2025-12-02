@@ -87,7 +87,12 @@ function addItem(item: { name: string; value: number }) {
           <div v-if="!createOrder" class="list-row flex justify-center">
             <button class="btn btn-primary" @click="createOrder = true">{{$t('modal.addOrder')}}</button>
           </div>
-          <OrderListItem v-else :mode="FieldModes.Create" @addOrder="addOrder"></OrderListItem>
+          <OrderListItem
+            v-else
+            :mode="FieldModes.Create"
+            @addOrder="addOrder"
+            @cancel='createOrder = false'
+          ></OrderListItem>
         </div>
         <div v-else-if="selectedTab === 'Itens'">
           <ItemListItem
@@ -100,9 +105,16 @@ function addItem(item: { name: string; value: number }) {
             @deleteItem="store.removeItem"
           ></ItemListItem>
           <div v-if="!createItem" class="list-row flex justify-center">
-            <button class="btn btn-primary" @click="createItem = true">{{$t('modal.addItem')}}</button>
+            <button class="btn btn-primary" @click="createItem = true">
+              {{$t('modal.addItem')}}
+            </button>
           </div>
-          <ItemListItem v-else :mode="FieldModes.Create" @addItem="addItem"></ItemListItem>
+          <ItemListItem
+            v-else
+            :mode="FieldModes.Create"
+            @addItem="addItem"
+            @cancel='createItem = false'
+          ></ItemListItem>
         </div>
         <div v-else-if="selectedTab === 'Pessoas'">
           <PersonListItem

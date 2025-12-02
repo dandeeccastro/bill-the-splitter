@@ -51,11 +51,19 @@ const i18n = createI18n({
       },
       editOrder: {
         chooseItem: 'Pick an item',
+        cancelOrder: 'Cancel',
         item: 'Item',
         howMany: 'How many?',
         whoOrdered: "Who's ordering that?",
         updateOrder: 'Update order',
       },
+      editItem: {
+        name: 'Name',
+        valueComma: 'Value (with comma)',
+        addItem: 'Add item',
+        updateItem: 'Update item',
+        cancel: 'Cancel'
+      }
     },
     pt: {
       total: 'Total',
@@ -77,10 +85,18 @@ const i18n = createI18n({
       editOrder: {
         chooseItem: 'Escolha um item',
         item: 'Item',
+        cancelOrder: 'Cancelar',
         howMany: 'Quantos?',
         whoOrdered: "Quem está pedindo?",
         updateOrder: 'Atualizar pedido',
       },
+      editItem: {
+        name: 'Nome',
+        valueComma: 'Valor (com vírgula)',
+        addItem: 'Adicionar item',
+        updateItem: 'Atualizar item',
+        cancel: 'Cancelar'
+      }
     }
   }
 });

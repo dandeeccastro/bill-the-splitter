@@ -20,7 +20,7 @@ const props = defineProps<{
   mode: number
 }>()
 
-const emit = defineEmits(['editItem', 'deleteItem', 'addItem'])
+const emit = defineEmits(['editItem', 'deleteItem', 'addItem', 'cancel'])
 
 const mode = ref(props.mode)
 
@@ -71,17 +71,21 @@ defineExpose({ value })
   <div class="list-row" v-else>
     <div class="list-col-grow">
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Nome</legend>
+        <legend class="fieldset-legend">{{ $t('editItem.name') }}</legend>
         <input type="text" v-model="name" class="input" />
       </fieldset>
       <fieldset class="fieldset">
-        <legend class="fieldset-legend">Valor (com vírgula)</legend>
+        <legend class="fieldset-legend">{{ $t('editItem.valueComma') }}</legend>
         <input v-maska:value.unmasked="maskOptions" v-model="maskedValue" class="input" />
       </fieldset>
       <fieldset class="fieldset">
         <button class="btn" @click="mode === Mode.Create ? addItem() : editItem()">
           <v-icon class="mx-1" name="bi-check-lg"></v-icon>
-          {{ mode === Mode.Create ? 'Adicionar' : 'Atualizar' }} item
+          {{ mode === Mode.Create ? $t('editItem.addItem') : $t('editItem.updateItem') }}
+        </button>
+        <button class='btn' @click='$emit("cancel")'>
+          <v-icon class="mx-1" name="io-close"></v-icon>
+          {{ $t('editItem.cancel')}}
         </button>
       </fieldset>
     </div>

@@ -15,7 +15,7 @@ enum Mode {
 }
 
 const store = useTableStore()
-const emit = defineEmits(['editOrder', 'deleteOrder', 'addOrder'])
+const emit = defineEmits(['editOrder', 'deleteOrder', 'addOrder', 'cancel'])
 
 const props = defineProps<{
   order?: Order
@@ -94,6 +94,10 @@ function addOrder() {
         <button class="btn" @click="mode === Mode.Create ? addOrder() : editOrder()">
           <v-icon class="mx-1" name="bi-check-lg"></v-icon>
           {{ $t('editOrder.updateOrder')}}
+        </button>
+        <button class="btn" @click="$emit('cancel')">
+          <v-icon class="mx-1" name="io-close"></v-icon>
+          {{ $t('editOrder.cancelOrder')}}
         </button>
       </fieldset>
     </div>
