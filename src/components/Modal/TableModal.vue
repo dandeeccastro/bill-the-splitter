@@ -7,9 +7,9 @@ enum FieldModes {
   Edit, Create,
 }
 
-import PersonListItem from '@/components/PersonListItem.vue'
-import ItemListItem from '@/components/ItemListItem.vue'
-import OrderListItem from '@/components/OrderListItem.vue'
+import PersonListItem from '@/components/ListItem/PersonListItem.vue'
+import FoodListItem from '@/components/ListItem/FoodListItem.vue'
+import OrderListItem from '@/components/ListItem/OrderListItem.vue'
 
 const store = useTableStore()
 
@@ -95,7 +95,7 @@ function addItem(item: { name: string; value: number }) {
           ></OrderListItem>
         </div>
         <div v-else-if="selectedTab === 'Itens'">
-          <ItemListItem
+          <FoodListItem
             v-for="(item, index) of store.items"
             :key="item.name"
             :item="item"
@@ -103,18 +103,18 @@ function addItem(item: { name: string; value: number }) {
             :mode="FieldModes.View"
             @editItem="store.editItem"
             @deleteItem="store.removeItem"
-          ></ItemListItem>
+          ></FoodListItem>
           <div v-if="!createItem" class="list-row flex justify-center">
             <button class="btn btn-primary" @click="createItem = true">
               {{$t('modal.addItem')}}
             </button>
           </div>
-          <ItemListItem
+          <FoodListItem
             v-else
             :mode="FieldModes.Create"
             @addItem="addItem"
             @cancel='createItem = false'
-          ></ItemListItem>
+          ></FoodListItem>
         </div>
         <div v-else-if="selectedTab === 'Pessoas'">
           <PersonListItem

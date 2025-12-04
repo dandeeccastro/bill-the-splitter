@@ -3,9 +3,9 @@ import { ref, onBeforeMount } from 'vue'
 import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
-import TotalTab from '@/components/TotalTab.vue'
-import PartialTab from '@/components/PartialTab.vue'
-import TableModal from '@/components/TableModal.vue'
+import TotalTab from '@/components/Modal/TotalTab.vue'
+import PartialTab from '@/components/Modal/PartialTab.vue'
+import TableModal from '@/components/Modal/TableModal.vue'
 import { useTableStore } from './stores/table'
 import { onMounted } from 'vue'
 
