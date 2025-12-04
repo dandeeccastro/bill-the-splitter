@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { useTableStore } from '@/stores/table'
-import { formatMoney } from '@/services/currency'
 
 const store = useTableStore()
 </script>

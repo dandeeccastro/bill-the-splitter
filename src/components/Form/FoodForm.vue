@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { formatMoney } from '@/services/currency'
 import { vMaska } from 'maska/vue'
 
 interface Item {
