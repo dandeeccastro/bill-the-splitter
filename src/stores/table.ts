@@ -79,9 +79,11 @@ export const useTableStore = defineStore('table', () => {
   }
 
   function editPerson(index: number, newName: string) {
-    const currentName = people.value[index]
-    people.value[index] = newName
-    reassignOrdersToPerson(currentName, newName)
+    if (!people.value.includes(newName)) {
+      const currentName = people.value[index]
+      people.value[index] = newName
+      reassignOrdersToPerson(currentName, newName)
+    }
   }
 
   function removePerson(idx: number) {
@@ -98,9 +100,12 @@ export const useTableStore = defineStore('table', () => {
   }
 
   function editItem(idx: number, item: Item) {
-    const oldName = items.value[idx].name
-    items.value[idx] = item
-    reassignOrdersForItem(oldName, item.name)
+    const names = items.value.map((item: Item) => item.name)
+    if (!names.includes(item.name)) {
+      const oldName = items.value[idx].name
+      items.value[idx] = item
+      reassignOrdersForItem(oldName, item.name)
+    }
   }
 
   function removeItem(idx: number) {
@@ -127,22 +132,25 @@ export const useTableStore = defineStore('table', () => {
 
   function reassignOrdersToPerson(currentName: string, newName: string) {
     for (const orderIdx in orders.value) {
-      const currentPeople = orders.value[orderIdx].people
+      const iOrderIdx = parseInt(orderIdx, 10);
+      const currentPeople = orders.value[iOrderIdx].people
       if (currentPeople.includes(currentName)) {
-        editOrder(parseInt(orderIdx, 10), {
-          ...orders.value[orderIdx],
-          people: currentPeople.map((person) => (person === currentName ? newName : person)),
-        })
+        const newPeople = currentPeople.map((person) => (person === currentName ? newName : person));
+
+        const newOrder: Order = {
+          ...orders.value[iOrderIdx],
+          people: newPeople,
+        }
+
+        editOrder(iOrderIdx, newOrder);
       }
     }
   }
 
   function deassignOrdersFromPerson(name: string) {
     const deassignableOrders = orders.value
-      .reduce((acc: number[], curr: Order, idx: number) => {
-        if (curr.people.includes(name)) acc.push(idx)
-        return acc
-      }, [])
+      .filter((order) => order.people.includes(name))
+      .map((_order, idx) => idx)
       .sort((a, b) => b - a)
 
     for (const idx of deassignableOrders) {

@@ -18,6 +18,60 @@ describe('Table Store Tab Functionality', () => {
     expect(Object.keys(store.tableTab.tabs)).toContain('Foo')
     expect(Object.keys(store.tableTab.tabs)).not.toContain('Bar')
   })
+
+  it('should reassing orders when person name is changed', () => {
+    const store = useTableStore()
+
+    store.addPerson('Foo');
+    store.addPerson('Bar');
+    store.addItem({ name: 'Comida', value: 1299 })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo', 'Bar'] })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo'] })
+    store.editPerson(0, 'Baz');
+
+    expect(store.orders[0].people).toEqual(['Baz', 'Bar'])
+    expect(store.orders[1].people).toContain('Baz')
+  })
+
+  it('should remove orders when people are deleted', () => {
+    const store = useTableStore()
+
+    store.addPerson('Foo');
+    store.addPerson('Bar');
+    store.addItem({ name: 'Comida', value: 1299 })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo', 'Bar'] })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo'] })
+
+    store.removePerson(0);
+
+    expect(store.orders.length).toEqual(1)
+    expect(store.orders[0].people).toEqual(['Bar'])
+  })
+
+  it('should change item orders on item rename', () => {
+    const store = useTableStore()
+
+    store.addPerson('Foo');
+    store.addItem({ name: 'Comida', value: 1299 })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo'] })
+    store.editItem(0, { name: 'Comida123', value: 1299 });
+
+    expect(store.orders[0].item).toEqual('Comida123')
+  })
+
+  it('should delete orders that have a deleted item in them', () => {
+    const store = useTableStore()
+
+    store.addPerson('Foo');
+    store.addItem({ name: 'Comida', value: 1299 })
+    store.addItem({ name: 'Bebida', value: 1299 })
+    store.addOrder({ amount: 1, item: 'Comida', people: ['Foo'] })
+    store.addOrder({ amount: 1, item: 'Bebida', people: ['Foo'] })
+    store.removeItem(0)
+
+    expect(store.orders.length).toEqual(1)
+    expect(store.orders[0].item).toEqual('Bebida')
+  })
 })
 
 describe('Table Store Math Functions', () => {
